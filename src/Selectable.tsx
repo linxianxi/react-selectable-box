@@ -52,6 +52,13 @@ const Selectable = forwardRef<SelectableRef, SelectableProps>(
     ref,
   ) => {
     const [isDragging, setIsDragging] = useState(false);
+    const [startCoords, setStartCoords] = useState({ x: 0, y: 0 });
+    const [moveCoords, setMoveCoords] = useState({ x: 0, y: 0 });
+    const isStart = useRef(false);
+    const selectingValue = useRef([]);
+    const [startTarget, setStartTarget] = useState<HTMLElement | null>(null);
+    const startInside = useRef(false);
+    const moveClient = useRef({ x: 0, y: 0 });
     const [value, setValue] = useMergedState(defaultValue || [], {
       value: propsValue,
       onChange: (newValue) => {
@@ -74,16 +81,17 @@ const Selectable = forwardRef<SelectableRef, SelectableProps>(
         }
       },
     });
-    const [startCoords, setStartCoords] = useState({ x: 0, y: 0 });
-    const [moveCoords, setMoveCoords] = useState({ x: 0, y: 0 });
-    const isStart = useRef(false);
-    const selectingValue = useRef([]);
-    const [startTarget, setStartTarget] = useState<HTMLElement | null>(null);
-    const startInside = useRef(false);
-    const moveClient = useRef({ x: 0, y: 0 });
 
+    const startCoordsRef = useRef(startCoords);
+    startCoordsRef.current = startCoords;
     const isDraggingRef = useRef(isDragging);
     isDraggingRef.current = isDragging;
+
+    const top = Math.min(startCoords.y, moveCoords.y);
+    const left = Math.min(startCoords.x, moveCoords.x);
+    const width = isDragging ? Math.abs(startCoords.x - moveCoords.x) : 0;
+    const height = isDragging ? Math.abs(startCoords.y - moveCoords.y) : 0;
+    const boxRect = { top, left, width, height };
 
     const checkScroll = () => {
       if (isDraggingRef.current) {
@@ -122,10 +130,8 @@ const Selectable = forwardRef<SelectableRef, SelectableProps>(
       const onMouseMove = (e: MouseEvent) => {
         const shouldContinue = selectFromInside ? true : !startInside.current;
         if (isStart.current && shouldContinue) {
-          handleStart();
           const { clientX, clientY } = e;
           moveClient.current = { x: clientX, y: clientY };
-          setIsDragging(true);
           const { left, top } = container.getBoundingClientRect();
           const x = clientX - left + container.scrollLeft;
           const y = clientY - top + container.scrollTop;
@@ -133,6 +139,14 @@ const Selectable = forwardRef<SelectableRef, SelectableProps>(
             x: Math.min(x, container.scrollWidth),
             y: Math.min(y, container.scrollHeight),
           });
+          const width = Math.abs(startCoordsRef.current.x - x);
+          const height = Math.abs(startCoordsRef.current.y - y);
+          // prevent trigger when click too fast
+          // https://github.com/linxianxi/react-selectable-box/issues/5
+          if (width * height > 1) {
+            setIsDragging(true);
+            handleStart();
+          }
         } else {
           setStartTarget(null);
         }
@@ -184,11 +198,6 @@ const Selectable = forwardRef<SelectableRef, SelectableProps>(
     }, [disabled, selectFromInside]);
 
     const container = getContainer();
-    const top = Math.min(startCoords.y, moveCoords.y);
-    const left = Math.min(startCoords.x, moveCoords.x);
-    const width = isDragging ? Math.abs(startCoords.x - moveCoords.x) : 0;
-    const height = isDragging ? Math.abs(startCoords.y - moveCoords.y) : 0;
-    const boxRect = { top, left, width, height };
 
     const contextValue = useMemo(
       () => ({

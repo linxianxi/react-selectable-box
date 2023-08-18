@@ -6,7 +6,7 @@ for (let i = 0; i < 200; i++) {
   list.push(String(i));
 }
 
-const Item = ({ value, onClick }: { value: string; onClick: (isSelected: boolean) => void }) => {
+const Item = ({ value }: { value: string }) => {
   const { setNodeRef, isSelected, isAdding, isRemoving } = useSelectable({
     value,
   });
@@ -23,7 +23,6 @@ const Item = ({ value, onClick }: { value: string; onClick: (isSelected: boolean
         border: isAdding ? '1px solid #1677ff' : undefined,
         background: isRemoving ? 'red' : isSelected ? '#1677ff' : '#ccc',
       }}
-      onClick={() => onClick(isSelected)}
     >
       {value}
     </div>
@@ -37,11 +36,10 @@ export default () => {
     <Selectable
       value={value}
       onStart={() => {
-        console.log('start');
+        setValue([]);
       }}
-      onEnd={(selectingValue, { added, removed }) => {
-        const result = value.concat(added).filter((i) => !removed.includes(i));
-        setValue(result);
+      onEnd={(newValue) => {
+        setValue(newValue);
       }}
     >
       <div
@@ -54,17 +52,7 @@ export default () => {
         }}
       >
         {list.map((i) => (
-          <Item
-            key={i}
-            value={i}
-            onClick={(isSelected) => {
-              if (isSelected) {
-                setValue(value.filter((val) => val !== i));
-              } else {
-                setValue(value.concat(i));
-              }
-            }}
-          />
+          <Item key={i} value={i} />
         ))}
       </div>
     </Selectable>
