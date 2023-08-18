@@ -1,10 +1,12 @@
 {
-  "include": ["src", "tests", ".dumi/**/*", ".dumirc.ts", "*.ts"],
+  "include": ["src", "tests", ".dumi/**/*", ".dumirc.ts", "*.ts", "docs"],
   "compilerOptions": {
     "strict": true,
     "declaration": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
+    "target": "ES2015",
+    "moduleResolution": "Node",
     "resolveJsonModule": true,
     "jsx": "react-jsx",
     "baseUrl": ".",
@@ -12,8 +14,8 @@
     "paths": {
       "@@/*": [".dumi/tmp/*"],
       "@/*": ["src"],
-      "@arvinxu/npm-template": ["src"],
-      "@arvinxu/npm-template/*": ["src/*", "*"]
+      "react-selectable-box": ["src"],
+      "react-selectable-box/*": ["src/*", "*"]
     }
   }
 }

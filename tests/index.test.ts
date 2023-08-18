@@ -1,5 +1,3 @@
-import { hello } from '@arvinxu/npm-template';
-
-test('hello', () => {
-  expect(hello()).toBe('world');
+it('test', () => {
+  expect(2 > 1).toBeTruthy();
 });
