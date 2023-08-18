@@ -1,21 +1,12 @@
 ---
 hero:
-  title: @arvinxu/npm-template
-  description: a npm develop template
+  title: react-selectable-box
+  description: A React component that allows you to select elements in the drag area using the mouse
   actions:
     - text: 快速上手
-      link: /guide
+      link: /guides/api
     - text: Github
-      link: /usage
+      link: https://github.com/linxianxi/react-selectable-box
 ---
 
 <embed src="../README.md"></embed>
-
-工程框架选型如下：
-
-- 构建： father4
-- 文档： dumi2
-- CI: Github Action
-- CD:
-  - 文档发布: 使用 vercel 自动化触发文档站构建;
-  - npm 发布: 使用 `semantic-release` 实现 npm 包的自动化发布;
