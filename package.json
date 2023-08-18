@@ -24,7 +24,8 @@
   "types": "lib/index.d.ts",
   "files": [
     "lib",
-    "es"
+    "es",
+    "dist"
   ],
   "scripts": {
     "build": "father build",
