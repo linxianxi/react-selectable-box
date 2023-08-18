@@ -1,4 +1,4 @@
-import { useCallback, useContext, useEffect, useRef } from 'react';
+import React, { useCallback, useContext, useEffect, useRef } from 'react';
 import { SelectableContext } from '../context';
 import { isInRange } from '../utils';
 
