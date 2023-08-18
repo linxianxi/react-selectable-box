@@ -33,6 +33,7 @@ lambda/mock/index.js
 
 # umi
 .dumi/tmp*
+.doc
 
 # screenshot
 screenshot
