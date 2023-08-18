@@ -62,7 +62,7 @@ pnpm i react-selectable-box
 
 ### 使用
 
-[docs](<[./CHANGELOG.md](https://linxianxi.github.io/react-selectable-box/)>)
+[docs](https://linxianxi.github.io/react-selectable-box/)
 
 ## 迭代记录
 
