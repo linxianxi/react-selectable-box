@@ -66,7 +66,7 @@ pnpm i react-selectable-box
 
 ## 迭代记录
 
-详情：[CHANGELOG](./CHANGELOG.md)
+详情：[CHANGELOG](https://linxianxi.github.io/react-selectable-box/changelog)
 
 <div align="right">
 
