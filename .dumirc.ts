@@ -7,4 +7,5 @@ export default defineConfig({
     github: homepage,
   },
   html2sketch: {},
+  mfsu: false,
 });
