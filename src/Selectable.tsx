@@ -219,8 +219,7 @@ const Selectable = forwardRef<SelectableRef, SelectableProps>(
                 transform: `translate(${left}px, ${top}px)`,
                 width,
                 height,
-                background: 'orange',
-                opacity: 0.3,
+                backgroundColor: 'rgba(22, 119, 255, 0.3)',
                 ...boxStyle,
               }}
             />
