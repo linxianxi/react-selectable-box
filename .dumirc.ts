@@ -15,4 +15,8 @@ export default defineConfig({
   html2sketch: {},
   mfsu: false,
   outputPath: '.doc',
+  locales: [
+    { id: 'en-US', name: 'EN' },
+    { id: 'zh-CN', name: '中文' },
+  ],
 });
