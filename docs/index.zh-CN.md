@@ -1,11 +1,9 @@
 ---
-nav: Home
-
 hero:
   title: react-selectable-box
-  description: A React component that allows you to select elements in the drag area using the mouse
+  description: 一个可以用鼠标框选元素的 React 组件
   actions:
-    - text: Get Started
+    - text: 快速上手
       link: /guides/api
     - text: Github
       link: https://github.com/linxianxi/react-selectable-box

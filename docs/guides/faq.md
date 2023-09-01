@@ -4,9 +4,9 @@ group:
   title: Usage
   order: 0
 order: 1
-nav: 快速上手
+nav: Get Started
 ---
 
-### 为什么设置了样式 `user-select: none` 后，鼠标从设置了此样式的元素内部开始框选之后拖到容器边缘无法滚动？
+### Why after setting the style `user-select: none`, the mouse cannot scroll after starting the box selection from inside the element set with this style and dragging it to the edge of the container?
 
-经过测试，这是 `chrome` 的行为，`safari` 则不会。如果想让文字无法被选择，推荐使用 `::selection` 选择器在容器内设置为 `background-color: transparent`。
+After testing, this is the behavior of `chrome`, and `safari` does not. If you want the text not to be selectable, it is recommended to use the `::selection` selector to set `background-color: transparent` inside the container.

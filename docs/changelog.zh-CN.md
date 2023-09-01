@@ -1,7 +1,7 @@
 ---
-title: Changelog
+title: 更新记录
 nav:
-  title: Changelog
+  title: 更新记录
   order: 999
 ---
 
