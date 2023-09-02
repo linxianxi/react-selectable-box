@@ -6,6 +6,6 @@ group:
 order: 0
 ---
 
-### basic
+### Basic
 
 <code src="../examples/basic.tsx"></code>

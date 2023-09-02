@@ -87,10 +87,10 @@ const Selectable = forwardRef<SelectableRef, SelectableProps>(
     const isDraggingRef = useRef(isDragging);
     isDraggingRef.current = isDragging;
 
-    const top = Math.min(startCoords.y, moveCoords.y);
-    const left = Math.min(startCoords.x, moveCoords.x);
-    const width = isDragging ? Math.abs(startCoords.x - moveCoords.x) : 0;
-    const height = isDragging ? Math.abs(startCoords.y - moveCoords.y) : 0;
+    const top = Math.max(0, Math.min(startCoords.y, moveCoords.y));
+    const left = Math.max(0, Math.min(startCoords.x, moveCoords.x));
+    const width = isDragging ? Math.abs(startCoords.x - Math.max(0, moveCoords.x)) : 0;
+    const height = isDragging ? Math.abs(startCoords.y - Math.max(0, moveCoords.y)) : 0;
     const boxRect = { top, left, width, height };
 
     const checkScroll = () => {
@@ -143,7 +143,7 @@ const Selectable = forwardRef<SelectableRef, SelectableProps>(
           const height = Math.abs(startCoordsRef.current.y - y);
           // prevent trigger when click too fast
           // https://github.com/linxianxi/react-selectable-box/issues/5
-          if (width * height > 1) {
+          if (width > 1 || height > 1) {
             setIsDragging(true);
             handleStart();
           }

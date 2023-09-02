@@ -1,4 +1,4 @@
-import { Radio, Space, Switch } from 'antd';
+import { Descriptions, Radio, Switch } from 'antd';
 import React, { useState } from 'react';
 import Selectable, { useSelectable } from 'react-selectable-box';
 
@@ -17,17 +17,13 @@ const Item = ({ value, rule }: { value: string; rule: 'collision' | 'inclusion' 
     <div
       ref={setNodeRef}
       style={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
         width: 50,
         height: 50,
+        borderRadius: 4,
         border: isAdding ? '1px solid #1677ff' : undefined,
         background: isRemoving ? 'red' : isSelected ? '#1677ff' : '#ccc',
       }}
-    >
-      {value}
-    </div>
+    />
   );
 };
 
@@ -40,41 +36,48 @@ export default () => {
 
   return (
     <div>
-      <Space style={{ marginBottom: 20 }} direction="vertical">
-        <div>
-          enable: <Switch checked={enable} onChange={setEnable} />
-        </div>
-        <div>
-          selectFromInside: <Switch checked={selectFromInside} onChange={setSelectFromInside} />
-        </div>
-        <div>
-          rule:
-          <Radio.Group
-            value={rule}
-            onChange={(e) => setRule(e.target.value)}
-            buttonStyle="solid"
-            optionType="button"
-            options={[
-              { label: 'collision', value: 'collision' },
-              { label: 'inclusion', value: 'inclusion' },
-            ]}
-          />
-        </div>
-        <div>
-          mode:
-          <Radio.Group
-            value={mode}
-            onChange={(e) => setMode(e.target.value)}
-            buttonStyle="solid"
-            optionType="button"
-            options={[
-              { label: 'add', value: 'add' },
-              { label: 'remove', value: 'remove' },
-              { label: 'reverse', value: 'reverse' },
-            ]}
-          />
-        </div>
-      </Space>
+      <Descriptions
+        column={1}
+        items={[
+          { label: 'enable', children: <Switch checked={enable} onChange={setEnable} /> },
+          {
+            label: 'selectFromInside',
+            children: <Switch checked={selectFromInside} onChange={setSelectFromInside} />,
+          },
+          {
+            label: 'rule',
+            children: (
+              <Radio.Group
+                value={rule}
+                onChange={(e) => setRule(e.target.value)}
+                buttonStyle="solid"
+                optionType="button"
+                options={[
+                  { label: 'collision', value: 'collision' },
+                  { label: 'inclusion', value: 'inclusion' },
+                ]}
+              />
+            ),
+          },
+          {
+            label: 'mode',
+            children: (
+              <Radio.Group
+                value={mode}
+                onChange={(e) => setMode(e.target.value)}
+                buttonStyle="solid"
+                optionType="button"
+                options={[
+                  { label: 'add', value: 'add' },
+                  { label: 'remove', value: 'remove' },
+                  { label: 'reverse', value: 'reverse' },
+                ]}
+              />
+            ),
+          },
+        ]}
+      />
+
       <Selectable
         disabled={!enable}
         mode={mode}

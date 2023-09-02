@@ -46,27 +46,25 @@ A React component that allows you to select elements in the drag area using the 
 
 </div>
 
-## 简介
+## Introduction
 
 A React component that allows you to select elements in the drag area using the mouse
 
-## 快速上手
+## Usage
 
-### 安装
-
-推荐使用 `pnpm` 安装
+### Install
 
 ```bash
 pnpm i react-selectable-box
 ```
 
-### 使用
+### Docs
 
 [docs](https://linxianxi.github.io/react-selectable-box/)
 
-## 迭代记录
+## Changelog
 
-详情：[CHANGELOG](https://linxianxi.github.io/react-selectable-box/changelog)
+[CHANGELOG](https://linxianxi.github.io/react-selectable-box/changelog)
 
 <div align="right">
 

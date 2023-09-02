@@ -3,9 +3,9 @@ title: reset at end
 group:
   title: examples
   order: 1
-order: 2
+order: 3
 ---
 
-### reset at end
+### Reset previous selection when box selection ends
 
 <code src="../examples/reset-at-end.tsx"></code>
