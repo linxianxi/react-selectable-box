@@ -6,6 +6,6 @@ group:
 order: 5
 ---
 
-### click to select
+### You can add a click event to the item to achieve click selection
 
 <code src="../examples/click-to-select.tsx"></code>

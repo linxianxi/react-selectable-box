@@ -19,17 +19,13 @@ const Cell = ({ value, style }: { value: string; style: React.CSSProperties }) =
       ref={setNodeRef}
       style={{
         ...style,
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
         width: 50,
         height: 50,
+        borderRadius: 4,
         border: isAdding ? '1px solid #1677ff' : undefined,
         background: isRemoving ? 'red' : isSelected ? '#1677ff' : '#ccc',
       }}
-    >
-      {value}
-    </div>
+    />
   );
 };
 

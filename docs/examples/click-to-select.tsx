@@ -15,18 +15,14 @@ const Item = ({ value, onClick }: { value: string; onClick: (isSelected: boolean
     <div
       ref={setNodeRef}
       style={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
         width: 50,
         height: 50,
+        borderRadius: 4,
         border: isAdding ? '1px solid #1677ff' : undefined,
         background: isRemoving ? 'red' : isSelected ? '#1677ff' : '#ccc',
       }}
       onClick={() => onClick(isSelected)}
-    >
-      {value}
-    </div>
+    />
   );
 };
 

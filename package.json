@@ -67,6 +67,9 @@
   "devDependencies": {
     "@commitlint/cli": "^17",
     "@commitlint/config-conventional": "^17",
+    "@dnd-kit/core": "^6.0.8",
+    "@dnd-kit/sortable": "^7.0.2",
+    "@dnd-kit/utilities": "^3.2.1",
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/git": "^10.0.1",
     "@testing-library/jest-dom": "^5",

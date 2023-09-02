@@ -7,8 +7,10 @@ for (let i = 0; i < 200; i++) {
 }
 
 const Item = ({ value }: { value: string }) => {
+  const disabled = ['46', '47', '48'].includes(value);
   const { setNodeRef, isSelected, isAdding, isRemoving } = useSelectable({
     value,
+    disabled,
   });
 
   return (
@@ -19,7 +21,7 @@ const Item = ({ value }: { value: string }) => {
         height: 50,
         borderRadius: 4,
         border: isAdding ? '1px solid #1677ff' : undefined,
-        background: isRemoving ? 'red' : isSelected ? '#1677ff' : '#ccc',
+        background: disabled ? '#999' : isRemoving ? 'red' : isSelected ? '#1677ff' : '#ccc',
       }}
     />
   );
@@ -35,18 +37,13 @@ export default () => {
         const result = value.concat(added).filter((i) => !removed.includes(i));
         setValue(result);
       }}
-      getContainer={() => document.querySelector('.scroll-container') as HTMLElement}
     >
       <div
-        className="scroll-container"
         style={{
-          position: 'relative',
           display: 'flex',
           flexWrap: 'wrap',
           gap: 20,
           padding: 20,
-          height: 400,
-          overflow: 'auto',
           border: '1px solid #ccc',
         }}
       >
