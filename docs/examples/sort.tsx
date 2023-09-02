@@ -119,7 +119,7 @@ export default () => {
         <Selectable
           value={value}
           disabled={isSorting}
-          getContainer={() => document.querySelector('.container')}
+          getContainer={() => document.querySelector('.container') as HTMLElement}
           onEnd={(selectingValue, { added, removed }) => {
             const result = value.concat(added).filter((i) => !removed.includes(i));
             setValue(result);
