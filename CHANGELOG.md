@@ -1,3 +1,9 @@
+## [1.0.4](https://github.com/linxianxi/react-selectable-box/compare/v1.0.3...v1.0.4) (2023-09-03)
+
+### Bug Fixes
+
+- fixed some boundary issues with disabled ([#12](https://github.com/linxianxi/react-selectable-box/issues/12)) ([4a0b4b6](https://github.com/linxianxi/react-selectable-box/commit/4a0b4b6ebf703fea201933d17b23faa957ce032a))
+
 ## [1.0.3](https://github.com/linxianxi/react-selectable-box/compare/v1.0.2...v1.0.3) (2023-09-03)
 
 ### Bug Fixes
