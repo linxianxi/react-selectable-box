@@ -1,6 +1,3 @@
-import Portal from '@rc-component/portal';
-import useEvent from 'rc-util/lib/hooks/useEvent';
-import useMergedState from 'rc-util/lib/hooks/useMergedState';
 import React, {
   forwardRef,
   useEffect,
@@ -9,8 +6,11 @@ import React, {
   useRef,
   useState,
 } from 'react';
+import { createPortal } from 'react-dom';
 import { SelectableContext } from './context';
+import useEvent from './hooks/useEvent';
 import useLatest from './hooks/useLatest';
+import useMergedState from './hooks/useMergedState';
 
 interface SelectableProps {
   defaultValue?: React.Key[];
@@ -35,6 +35,13 @@ export interface SelectableRef {
 
 const defaultGetContainer = () => document.body;
 
+const getPortalContainer = (getContainer: () => HTMLElement = defaultGetContainer) => {
+  if (typeof window !== 'undefined') {
+    return getContainer();
+  }
+  return null;
+};
+
 const Selectable = forwardRef<SelectableRef, SelectableProps>(
   (
     {
@@ -44,7 +51,7 @@ const Selectable = forwardRef<SelectableRef, SelectableProps>(
       mode = 'add',
       children,
       selectFromInside = true,
-      getContainer = defaultGetContainer,
+      getContainer,
       boxStyle,
       boxClassName,
       onStart,
@@ -60,6 +67,7 @@ const Selectable = forwardRef<SelectableRef, SelectableProps>(
     const [startTarget, setStartTarget] = useState<HTMLElement | null>(null);
     const startInside = useRef(false);
     const moveClient = useRef({ x: 0, y: 0 });
+    const [container, setContainer] = useState(() => getPortalContainer(getContainer));
     const [value, setValue] = useMergedState(defaultValue || [], {
       value: propsValue,
     });
@@ -74,15 +82,18 @@ const Selectable = forwardRef<SelectableRef, SelectableProps>(
     const height = isDragging ? Math.abs(startCoords.y - Math.max(0, moveCoords.y)) : 0;
     const boxRect = { top, left, width, height };
 
+    useEffect(() => {
+      setContainer(getPortalContainer(getContainer));
+    });
+
     const checkScroll = () => {
-      if (isDraggingRef.current) {
-        const scrollContainer = getContainer();
-        const scrollContainerRect = scrollContainer.getBoundingClientRect();
-        const x = moveClient.current.x - scrollContainerRect.left + scrollContainer.scrollLeft;
-        const y = moveClient.current.y - scrollContainerRect.top + scrollContainer.scrollTop;
+      if (isDraggingRef.current && container) {
+        const containerRect = container.getBoundingClientRect();
+        const x = moveClient.current.x - containerRect.left + container.scrollLeft;
+        const y = moveClient.current.y - containerRect.top + container.scrollTop;
         setMoveCoords({
-          x: Math.min(x, scrollContainer.scrollWidth),
-          y: Math.min(y, scrollContainer.scrollHeight),
+          x: Math.min(x, container.scrollWidth),
+          y: Math.min(y, container.scrollHeight),
         });
       }
     };
@@ -103,7 +114,7 @@ const Selectable = forwardRef<SelectableRef, SelectableProps>(
         const removed: React.Key[] = [];
 
         newValue.forEach((i) => {
-          if (value.includes(i)) {
+          if (value?.includes(i)) {
             if (mode === 'remove' || mode === 'reverse') {
               removed.push(i);
             }
@@ -126,8 +137,6 @@ const Selectable = forwardRef<SelectableRef, SelectableProps>(
     };
 
     useEffect(() => {
-      const container = getContainer();
-
       if (disabled || !container) {
         handleReset();
         return;
@@ -138,7 +147,7 @@ const Selectable = forwardRef<SelectableRef, SelectableProps>(
       };
 
       const onMouseMove = (e: MouseEvent) => {
-        const shouldContinue = selectFromInside ? true : !startInside.current;
+        const shouldContinue = selectFromInsideRef.current ? true : !startInside.current;
         if (isStart.current && shouldContinue) {
           const { clientX, clientY } = e;
           moveClient.current = { x: clientX, y: clientY };
@@ -202,9 +211,7 @@ const Selectable = forwardRef<SelectableRef, SelectableProps>(
         window.removeEventListener('mousemove', onMouseMove);
         window.removeEventListener('mouseup', onMouseUp);
       };
-    }, [disabled]);
-
-    const container = getContainer();
+    }, [disabled, container]);
 
     const contextValue = useMemo(
       () => ({
@@ -223,8 +230,9 @@ const Selectable = forwardRef<SelectableRef, SelectableProps>(
     return (
       <SelectableContext.Provider value={contextValue}>
         {children}
-        {isDragging && (
-          <Portal open getContainer={getContainer}>
+        {isDragging &&
+          container &&
+          createPortal(
             <div
               className={boxClassName}
               style={{
@@ -238,9 +246,9 @@ const Selectable = forwardRef<SelectableRef, SelectableProps>(
                 backgroundColor: 'rgba(22, 119, 255, 0.3)',
                 ...boxStyle,
               }}
-            />
-          </Portal>
-        )}
+            />,
+            container,
+          )}
       </SelectableContext.Provider>
     );
   },

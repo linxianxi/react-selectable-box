@@ -18,7 +18,7 @@ export const useSelectable = ({
 
   const isDragging = !!context?.isDragging;
 
-  const isSelected = !!context?.value.includes(value);
+  const isSelected = !!context?.value?.includes(value);
 
   const isSelecting = isDragging && !disabled && inRange;
 

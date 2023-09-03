@@ -57,6 +57,10 @@ export default () => {
         const result = value.concat(added).filter((i) => !removed.includes(i));
         setValue(result);
       }}
+      shouldStart={(_, info) => {
+        console.log(info);
+        return true;
+      }}
     >
       <div
         style={{
