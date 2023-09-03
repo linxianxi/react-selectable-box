@@ -6,6 +6,6 @@ group:
 order: 7
 ---
 
-### Box selection in a virtual list using `react-window`
+### Box selection in a virtual list using `react-virtuoso`
 
 <code src="../examples/virtual-list.tsx"></code>

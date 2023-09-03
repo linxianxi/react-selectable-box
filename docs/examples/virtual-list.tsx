@@ -1,16 +1,14 @@
-import React, { useState } from 'react';
+import React, { HTMLAttributes, useState } from 'react';
 import Selectable, { useSelectable } from 'react-selectable-box';
-import { FixedSizeList } from 'react-window';
+import { VirtuosoGrid } from 'react-virtuoso';
 
 const list: string[] = [];
-for (let i = 0; i < 2000; i++) {
+for (let i = 0; i < 2002; i++) {
   list.push(String(i));
 }
 
-const columnCount = 10;
-
-const Cell = ({ value, style }: { value: string; style: React.CSSProperties }) => {
-  const { setNodeRef, isSelected, isAdding, isRemoving, isDragging, isSelecting } = useSelectable({
+const Item = ({ value }: { value: string }) => {
+  const { setNodeRef, isSelected, isAdding, isRemoving } = useSelectable({
     value,
   });
 
@@ -18,28 +16,28 @@ const Cell = ({ value, style }: { value: string; style: React.CSSProperties }) =
     <div
       ref={setNodeRef}
       style={{
-        ...style,
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
         width: 50,
         height: 50,
         borderRadius: 4,
         border: isAdding ? '1px solid #1677ff' : undefined,
         background: isRemoving ? 'red' : isSelected ? '#1677ff' : '#ccc',
       }}
-    />
-  );
-};
-
-const Row = ({ index, style }: { index: number; style: React.CSSProperties }) => {
-  const rowList = list.slice(index * columnCount, (index + 1) * columnCount);
-  return (
-    <div style={{ ...style, display: 'flex' }}>
-      {rowList.map((i, idx) => {
-        const marginRight = idx < 9 ? 20 : 0;
-        return <Cell key={i} value={i} style={{ marginRight }} />;
-      })}
+    >
+      {value}
     </div>
   );
 };
+
+const List: React.ForwardRefExoticComponent<
+  HTMLAttributes<HTMLDivElement> & React.RefAttributes<HTMLDivElement>
+> = React.forwardRef(({ style, ...props }, ref) => {
+  return (
+    <div ref={ref} {...props} style={{ ...style, display: 'flex', flexWrap: 'wrap', gap: 20 }} />
+  );
+});
 
 export default () => {
   const [value, setValue] = useState<React.Key[]>([]);
@@ -54,15 +52,15 @@ export default () => {
         setValue(result);
       }}
     >
-      <FixedSizeList
+      <VirtuosoGrid
+        totalCount={list.length}
+        style={{ height: 500 }}
+        components={{
+          List,
+        }}
         className="container"
-        height={500}
-        itemSize={70}
-        width={columnCount * 50 + (columnCount - 1) * 20}
-        itemCount={Math.ceil(list.length / columnCount)}
-      >
-        {({ index, style }) => <Row index={index} style={style} />}
-      </FixedSizeList>
+        itemContent={(index) => <Item value={list[index]} />}
+      />
     </Selectable>
   );
 };
