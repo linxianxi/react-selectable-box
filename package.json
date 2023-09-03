@@ -1,6 +1,6 @@
 {
   "name": "react-selectable-box",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "A React component that allows you to select elements in the drag area using the mouse",
   "keywords": [
     "react",

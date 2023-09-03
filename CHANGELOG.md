@@ -1,3 +1,9 @@
+## [1.0.5](https://github.com/linxianxi/react-selectable-box/compare/v1.0.4...v1.0.5) (2023-09-03)
+
+### Bug Fixes
+
+- selectFromInside should be corrected when changed ([#13](https://github.com/linxianxi/react-selectable-box/issues/13)) ([d8a701f](https://github.com/linxianxi/react-selectable-box/commit/d8a701f2a23f21a7c41b6a963ae98a0386082a25))
+
 ## [1.0.4](https://github.com/linxianxi/react-selectable-box/compare/v1.0.3...v1.0.4) (2023-09-03)
 
 ### Bug Fixes
