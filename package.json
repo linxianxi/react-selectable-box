@@ -96,7 +96,7 @@
     "prettier-plugin-packagejson": "^2",
     "react": "^18",
     "react-dom": "^18",
-    "react-window": "^1.8.9",
+    "react-virtuoso": "^4.5.0",
     "semantic-release": "^21",
     "stylelint": "^15",
     "typescript": "^5",

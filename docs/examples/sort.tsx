@@ -1,21 +1,23 @@
-import { DndContext } from '@dnd-kit/core';
+import { DndContext, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
 import { SortableContext, useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import React, { useState } from 'react';
 import Selectable, { useSelectable } from 'react-selectable-box';
 
 const list: string[] = [];
-for (let i = 0; i < 25; i++) {
+for (let i = 0; i < 200; i++) {
   list.push(String(i));
 }
 
 const Item = ({
   value,
   disabled,
+  onClick,
   selectedLength,
 }: {
   value: React.Key;
   disabled: boolean;
+  onClick: (isSelected: boolean) => void;
   selectedLength: number;
 }) => {
   const {
@@ -54,16 +56,18 @@ const Item = ({
         justifyContent: 'center',
         alignItems: 'center',
         position: 'relative',
-        zIndex: isDragging ? 999 : undefined,
         width: 50,
         height: 50,
         borderRadius: 4,
         transform: CSS.Transform.toString(transform),
         transition,
+        zIndex: isDragging ? 999 : undefined,
+        cursor: isSelected ? 'move' : undefined,
         visibility: isSelected && !isDragging && isSorting ? 'hidden' : undefined,
         border: isAdding ? '1px solid #1677ff' : undefined,
         background: isRemoving ? 'red' : isSelected ? '#1677ff' : '#ccc',
       }}
+      onClick={() => onClick(isSelected)}
     >
       {value}
       {isDragging && (
@@ -79,8 +83,18 @@ export default () => {
   const [beforeSortItems, setBeforeSortItems] = useState<React.Key[]>([]);
   const [isSorting, setIsSorting] = useState(false);
 
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        // make item click event available
+        distance: 1,
+      },
+    }),
+  );
+
   return (
     <DndContext
+      sensors={sensors}
       onDragStart={(event) => {
         setIsSorting(true);
         const index = event.active.data.current?.sortable.index as number;
@@ -121,6 +135,7 @@ export default () => {
           disabled={isSorting}
           getContainer={() => document.querySelector('.container') as HTMLElement}
           onEnd={(selectingValue, { added, removed }) => {
+            console.log('onEnd');
             const result = value.concat(added).filter((i) => !removed.includes(i));
             setValue(result);
           }}
@@ -137,7 +152,19 @@ export default () => {
             className="container"
           >
             {items.map((i) => (
-              <Item selectedLength={value.length} key={i} value={i} disabled={!value.includes(i)} />
+              <Item
+                selectedLength={value.length}
+                key={i}
+                value={i}
+                disabled={!value.includes(i)}
+                onClick={(isSelected) => {
+                  if (isSelected) {
+                    setValue(value.filter((val) => val !== i));
+                  } else {
+                    setValue(value.concat(i));
+                  }
+                }}
+              />
             ))}
           </div>
         </Selectable>

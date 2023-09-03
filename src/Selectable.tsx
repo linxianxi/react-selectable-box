@@ -10,6 +10,7 @@ import React, {
   useState,
 } from 'react';
 import { SelectableContext } from './context';
+import useLatest from './hooks/useLatest';
 
 interface SelectableProps {
   defaultValue?: React.Key[];
@@ -61,31 +62,11 @@ const Selectable = forwardRef<SelectableRef, SelectableProps>(
     const moveClient = useRef({ x: 0, y: 0 });
     const [value, setValue] = useMergedState(defaultValue || [], {
       value: propsValue,
-      onChange: (newValue) => {
-        if (onEnd) {
-          const added: React.Key[] = [];
-          const removed: React.Key[] = [];
-
-          newValue.forEach((i) => {
-            if (value.includes(i)) {
-              if (mode === 'remove' || mode === 'reverse') {
-                removed.push(i);
-              }
-            } else {
-              if (mode === 'add' || mode === 'reverse') {
-                added.push(i);
-              }
-            }
-          });
-          onEnd(newValue, { added, removed });
-        }
-      },
     });
 
-    const startCoordsRef = useRef(startCoords);
-    startCoordsRef.current = startCoords;
-    const isDraggingRef = useRef(isDragging);
-    isDraggingRef.current = isDragging;
+    const startCoordsRef = useLatest(startCoords);
+    const isDraggingRef = useLatest(isDragging);
+    const selectFromInsideRef = useLatest(selectFromInside);
 
     const top = Math.max(0, Math.min(startCoords.y, moveCoords.y));
     const left = Math.max(0, Math.min(startCoords.x, moveCoords.x));
@@ -111,15 +92,44 @@ const Selectable = forwardRef<SelectableRef, SelectableProps>(
     }));
 
     const handleStart = useEvent(() => {
-      if (!isDragging) {
+      if (!isDraggingRef.current) {
         onStart?.();
       }
     });
+
+    const handleEnd = useEvent((newValue: React.Key[]) => {
+      if (onEnd) {
+        const added: React.Key[] = [];
+        const removed: React.Key[] = [];
+
+        newValue.forEach((i) => {
+          if (value.includes(i)) {
+            if (mode === 'remove' || mode === 'reverse') {
+              removed.push(i);
+            }
+          } else {
+            if (mode === 'add' || mode === 'reverse') {
+              added.push(i);
+            }
+          }
+        });
+        onEnd(newValue, { added, removed });
+      }
+    });
+
+    const handleReset = () => {
+      setIsDragging(false);
+      setStartTarget(null);
+      isStart.current = false;
+      startInside.current = false;
+      selectingValue.current = [];
+    };
 
     useEffect(() => {
       const container = getContainer();
 
       if (disabled || !container) {
+        handleReset();
         return;
       }
 
@@ -143,7 +153,7 @@ const Selectable = forwardRef<SelectableRef, SelectableProps>(
           const height = Math.abs(startCoordsRef.current.y - y);
           // prevent trigger when click too fast
           // https://github.com/linxianxi/react-selectable-box/issues/5
-          if (width > 1 || height > 1) {
+          if (!isDraggingRef.current && (width > 1 || height > 1)) {
             setIsDragging(true);
             handleStart();
           }
@@ -159,18 +169,15 @@ const Selectable = forwardRef<SelectableRef, SelectableProps>(
 
         if (isDraggingRef.current) {
           setValue(selectingValue.current);
-          selectingValue.current = [];
-          setIsDragging(false);
+          handleEnd(selectingValue.current);
         }
-        setStartTarget(null);
-        isStart.current = false;
-        startInside.current = false;
+        handleReset();
       };
 
       const scrollListenerElement = container === document.body ? document : container;
 
       const onMouseDown = (e: MouseEvent) => {
-        if (!selectFromInside) {
+        if (!selectFromInsideRef.current) {
           setStartTarget(e.target as HTMLElement);
         }
 
@@ -195,7 +202,7 @@ const Selectable = forwardRef<SelectableRef, SelectableProps>(
         window.removeEventListener('mousemove', onMouseMove);
         window.removeEventListener('mouseup', onMouseUp);
       };
-    }, [disabled, selectFromInside]);
+    }, [disabled]);
 
     const container = getContainer();
 

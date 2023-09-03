@@ -6,6 +6,6 @@ group:
 order: 8
 ---
 
-### sort
+### Use `dnd-kit` to sort after selecting some options
 
 <code src="../examples/sort.tsx"></code>
