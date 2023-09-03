@@ -1,3 +1,9 @@
+## [1.0.3](https://github.com/linxianxi/react-selectable-box/compare/v1.0.2...v1.0.3) (2023-09-03)
+
+### Bug Fixes
+
+- remove mousemove listener in useEffect ([#11](https://github.com/linxianxi/react-selectable-box/issues/11)) ([45f7b58](https://github.com/linxianxi/react-selectable-box/commit/45f7b58f4abadb1511c1dda772bfa3e0f0209771))
+
 ## [1.0.2](https://github.com/linxianxi/react-selectable-box/compare/v1.0.1...v1.0.2) (2023-09-02)
 
 ### Bug Fixes
