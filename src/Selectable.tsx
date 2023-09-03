@@ -192,7 +192,7 @@ const Selectable = forwardRef<SelectableRef, SelectableProps>(
       return () => {
         container.removeEventListener('mousedown', onMouseDown);
         scrollListenerElement.removeEventListener('scroll', onScroll);
-        window.removeEventListener('mousemove', onMouseDown);
+        window.removeEventListener('mousemove', onMouseMove);
         window.removeEventListener('mouseup', onMouseUp);
       };
     }, [disabled, selectFromInside]);
