@@ -47,7 +47,6 @@ export default () => {
       value={value}
       getContainer={() => document.querySelector('.container') as HTMLElement}
       onEnd={(selectingValue, { added, removed }) => {
-        console.log(selectingValue, added, removed);
         const result = value.concat(added).filter((i) => !removed.includes(i));
         setValue(result);
       }}
