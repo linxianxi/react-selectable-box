@@ -30,7 +30,7 @@ const Item = ({ value, rule }: { value: string; rule: 'collision' | 'inclusion' 
 export default () => {
   const [value, setValue] = useState<React.Key[]>([]);
   const [mode, setMode] = useState<'add' | 'remove' | 'reverse'>('add');
-  const [selectFromInside, setSelectFromInside] = useState(true);
+  const [selectStartRange, setSelectStartRange] = useState<'all' | 'inside' | 'outside'>('all');
   const [enable, setEnable] = useState(true);
   const [rule, setRule] = useState<'collision' | 'inclusion'>('collision');
 
@@ -41,21 +41,33 @@ export default () => {
         items={[
           { label: 'enable', children: <Switch checked={enable} onChange={setEnable} /> },
           {
-            label: 'selectFromInside',
-            children: <Switch checked={selectFromInside} onChange={setSelectFromInside} />,
+            label: 'selectStartRange',
+            children: (
+              <Radio.Group
+                value={selectStartRange}
+                buttonStyle="solid"
+                optionType="button"
+                options={[
+                  { label: 'all', value: 'all' },
+                  { label: 'inside', value: 'inside' },
+                  { label: 'outside', value: 'outside' },
+                ]}
+                onChange={(e) => setSelectStartRange(e.target.value)}
+              />
+            ),
           },
           {
             label: 'rule',
             children: (
               <Radio.Group
                 value={rule}
-                onChange={(e) => setRule(e.target.value)}
                 buttonStyle="solid"
                 optionType="button"
                 options={[
                   { label: 'collision', value: 'collision' },
                   { label: 'inclusion', value: 'inclusion' },
                 ]}
+                onChange={(e) => setRule(e.target.value)}
               />
             ),
           },
@@ -82,7 +94,7 @@ export default () => {
         disabled={!enable}
         mode={mode}
         value={value}
-        selectFromInside={selectFromInside}
+        selectStartRange={selectStartRange}
         onEnd={(selectingValue, { added, removed }) => {
           const result = value.concat(added).filter((i) => !removed.includes(i));
           setValue(result);
