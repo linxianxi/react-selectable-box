@@ -54,11 +54,11 @@ export const useSelectable = ({
   }, []);
 
   return {
+    setNodeRef,
     isSelecting,
     isRemoving,
     isSelected,
     isAdding,
-    setNodeRef,
     isDragging,
   };
 };

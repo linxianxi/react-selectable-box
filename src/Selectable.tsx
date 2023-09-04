@@ -18,7 +18,7 @@ interface SelectableProps {
   disabled?: boolean;
   children?: React.ReactNode;
   mode?: 'add' | 'remove' | 'reverse';
-  selectFromInside?: boolean;
+  selectStartRange?: 'all' | 'inside' | 'outside';
   getContainer?: () => HTMLElement;
   boxStyle?: React.CSSProperties;
   boxClassName?: string;
@@ -50,7 +50,7 @@ const Selectable = forwardRef<SelectableRef, SelectableProps>(
       disabled,
       mode = 'add',
       children,
-      selectFromInside = true,
+      selectStartRange = 'all',
       getContainer,
       boxStyle,
       boxClassName,
@@ -62,7 +62,6 @@ const Selectable = forwardRef<SelectableRef, SelectableProps>(
     const [isDragging, setIsDragging] = useState(false);
     const [startCoords, setStartCoords] = useState({ x: 0, y: 0 });
     const [moveCoords, setMoveCoords] = useState({ x: 0, y: 0 });
-    const isStart = useRef(false);
     const selectingValue = useRef([]);
     const [startTarget, setStartTarget] = useState<HTMLElement | null>(null);
     const startInside = useRef(false);
@@ -74,7 +73,7 @@ const Selectable = forwardRef<SelectableRef, SelectableProps>(
 
     const startCoordsRef = useLatest(startCoords);
     const isDraggingRef = useLatest(isDragging);
-    const selectFromInsideRef = useLatest(selectFromInside);
+    const selectStartRangeRef = useLatest(selectStartRange);
 
     const top = Math.max(0, Math.min(startCoords.y, moveCoords.y));
     const left = Math.max(0, Math.min(startCoords.x, moveCoords.x));
@@ -128,17 +127,19 @@ const Selectable = forwardRef<SelectableRef, SelectableProps>(
       }
     });
 
-    const handleReset = () => {
-      setIsDragging(false);
-      setStartTarget(null);
-      isStart.current = false;
-      startInside.current = false;
-      selectingValue.current = [];
-    };
-
     useEffect(() => {
+      let isMouseDowning = false;
+
+      const reset = () => {
+        setIsDragging(false);
+        setStartTarget(null);
+        isMouseDowning = false;
+        startInside.current = false;
+        selectingValue.current = [];
+      };
+
       if (disabled || !container) {
-        handleReset();
+        reset();
         return;
       }
 
@@ -147,8 +148,7 @@ const Selectable = forwardRef<SelectableRef, SelectableProps>(
       };
 
       const onMouseMove = (e: MouseEvent) => {
-        const shouldContinue = selectFromInsideRef.current ? true : !startInside.current;
-        if (isStart.current && shouldContinue) {
+        if (isMouseDowning) {
           const { clientX, clientY } = e;
           moveClient.current = { x: clientX, y: clientY };
           const { left, top } = container.getBoundingClientRect();
@@ -158,16 +158,23 @@ const Selectable = forwardRef<SelectableRef, SelectableProps>(
             x: Math.min(x, container.scrollWidth),
             y: Math.min(y, container.scrollHeight),
           });
-          const width = Math.abs(startCoordsRef.current.x - x);
-          const height = Math.abs(startCoordsRef.current.y - y);
-          // prevent trigger when click too fast
-          // https://github.com/linxianxi/react-selectable-box/issues/5
-          if (!isDraggingRef.current && (width > 1 || height > 1)) {
-            setIsDragging(true);
-            handleStart();
+
+          if (!isDraggingRef.current) {
+            let shouldDraggingStart = true;
+            if (selectStartRangeRef.current === 'outside') {
+              shouldDraggingStart = !startInside.current;
+            } else if (selectStartRangeRef.current === 'inside') {
+              shouldDraggingStart = startInside.current;
+            }
+            const boxWidth = Math.abs(startCoordsRef.current.x - x);
+            const boxHeight = Math.abs(startCoordsRef.current.y - y);
+            // prevent trigger when click too fast
+            // https://github.com/linxianxi/react-selectable-box/issues/5
+            if (shouldDraggingStart && (boxWidth > 1 || boxHeight > 1)) {
+              setIsDragging(true);
+              handleStart();
+            }
           }
-        } else {
-          setStartTarget(null);
         }
       };
 
@@ -180,18 +187,19 @@ const Selectable = forwardRef<SelectableRef, SelectableProps>(
           setValue(selectingValue.current);
           handleEnd(selectingValue.current);
         }
-        handleReset();
+        reset();
       };
 
       const scrollListenerElement = container === document.body ? document : container;
 
       const onMouseDown = (e: MouseEvent) => {
-        if (!selectFromInsideRef.current) {
+        isMouseDowning = true;
+
+        if (selectStartRangeRef.current !== 'all') {
           setStartTarget(e.target as HTMLElement);
         }
 
         const { clientX, clientY } = e;
-        isStart.current = true;
         const { left, top } = container.getBoundingClientRect();
         setStartCoords({
           x: clientX - left + container.scrollLeft,
