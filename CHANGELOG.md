@@ -1,3 +1,9 @@
+# [1.1.0](https://github.com/linxianxi/react-selectable-box/compare/v1.0.5...v1.1.0) (2023-09-04)
+
+### Features
+
+- support selectStartRange, remove selectFromInside ([#14](https://github.com/linxianxi/react-selectable-box/issues/14)) ([b7f845f](https://github.com/linxianxi/react-selectable-box/commit/b7f845f0a1f780dbfde95892fb23440494a72d56))
+
 ## [1.0.5](https://github.com/linxianxi/react-selectable-box/compare/v1.0.4...v1.0.5) (2023-09-03)
 
 ### Bug Fixes
