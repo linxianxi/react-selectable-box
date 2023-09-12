@@ -6,7 +6,7 @@ import { useState } from 'react';
 import Selectable, { useSelectable } from 'react-selectable-box';
 
 const list: string[] = [];
-for (let i = 0; i < 19; i++) {
+for (let i = 0; i < 200; i++) {
   list.push(String(i));
 }
 
