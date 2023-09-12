@@ -1,11 +1,12 @@
-import { DndContext, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
+// should use these versions https://github.com/clauderic/dnd-kit/issues/901#issuecomment-1340687113
+import { DndContext, DragOverlay, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
 import { SortableContext, useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import Selectable, { useSelectable } from 'react-selectable-box';
 
 const list: string[] = [];
-for (let i = 0; i < 200; i++) {
+for (let i = 0; i < 19; i++) {
   list.push(String(i));
 }
 
@@ -13,18 +14,15 @@ const Item = ({
   value,
   disabled,
   onClick,
-  selectedLength,
 }: {
-  value: React.Key;
-  disabled: boolean;
+  value: string;
+  disabled?: boolean;
   onClick: (isSelected: boolean) => void;
-  selectedLength: number;
 }) => {
   const {
     setNodeRef: setSelectNodeRef,
     isSelected,
     isAdding,
-    isRemoving,
   } = useSelectable({
     value,
   });
@@ -36,7 +34,6 @@ const Item = ({
     transform,
     transition,
     isDragging,
-    isSorting,
   } = useSortable({
     id: value,
     disabled,
@@ -61,27 +58,23 @@ const Item = ({
         borderRadius: 4,
         transform: CSS.Transform.toString(transform),
         transition,
-        zIndex: isDragging ? 999 : undefined,
         cursor: isSelected ? 'move' : undefined,
-        visibility: isSelected && !isDragging && isSorting ? 'hidden' : undefined,
         border: isAdding ? '1px solid #1677ff' : undefined,
-        background: isRemoving ? 'red' : isSelected ? '#1677ff' : '#ccc',
+        opacity: isDragging ? 0.5 : undefined,
+        background: isSelected ? '#1677ff' : '#ccc',
       }}
       onClick={() => onClick(isSelected)}
     >
       {value}
-      {isDragging && (
-        <div style={{ position: 'absolute', right: 3, bottom: 0 }}>{selectedLength}</div>
-      )}
     </div>
   );
 };
 
 export default () => {
-  const [value, setValue] = useState<React.Key[]>([]);
-  const [items, setItems] = useState<React.Key[]>(list);
-  const [beforeSortItems, setBeforeSortItems] = useState<React.Key[]>([]);
-  const [isSorting, setIsSorting] = useState(false);
+  const [value, setValue] = useState<string[]>([]);
+  const [items, setItems] = useState<string[]>(list);
+  const [beforeSortItems, setBeforeSortItems] = useState<string[]>([]);
+  const [activeId, setActiveId] = useState<string | null>(null);
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -96,27 +89,15 @@ export default () => {
     <DndContext
       sensors={sensors}
       onDragStart={(event) => {
-        setIsSorting(true);
         const index = event.active.data.current?.sortable.index as number;
-        let unSelectItems: React.Key[] = [];
-        let sortValue: React.Key[] = [];
-        items.forEach((item) => {
-          if (value.includes(item)) {
-            sortValue.push(item);
-          } else {
-            unSelectItems.push(item);
-          }
-        });
-        if (index <= unSelectItems.length) {
-          unSelectItems.splice(index, 0, items[index]);
-        } else {
-          unSelectItems.push(...sortValue);
-        }
+        setActiveId(items[index]);
+        let unSelectItems: string[] = items.filter((item) => !value.includes(item));
+        unSelectItems.splice(index, 0, items[index]);
         setBeforeSortItems(items);
         setItems(unSelectItems);
       }}
       onDragEnd={(event) => {
-        setIsSorting(false);
+        setActiveId(null);
         if (event.over) {
           const index = event.over?.data.current?.sortable.index;
           const newItems = items.filter((item) => !value.includes(item));
@@ -129,13 +110,12 @@ export default () => {
         setValue([]);
       }}
     >
-      <SortableContext items={items} disabled={value.length === 0}>
+      <SortableContext items={items}>
         <Selectable
           value={value}
-          disabled={isSorting}
+          disabled={!!activeId}
           getContainer={() => document.querySelector('.container') as HTMLElement}
           onEnd={(selectingValue, { added, removed }) => {
-            console.log('onEnd');
             const result = value.concat(added).filter((i) => !removed.includes(i));
             setValue(result);
           }}
@@ -153,7 +133,6 @@ export default () => {
           >
             {items.map((i) => (
               <Item
-                selectedLength={value.length}
                 key={i}
                 value={i}
                 disabled={!value.includes(i)}
@@ -166,6 +145,40 @@ export default () => {
                 }}
               />
             ))}
+
+            <DragOverlay>
+              {activeId ? (
+                <div
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    width: 50,
+                    height: 50,
+                    borderRadius: 4,
+                    background: '#1677ff',
+                  }}
+                >
+                  {activeId}
+                  <div
+                    style={{
+                      position: 'absolute',
+                      right: -10,
+                      bottom: -10,
+                      display: 'flex',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      width: 20,
+                      height: 20,
+                      background: 'red',
+                      borderRadius: '50%',
+                    }}
+                  >
+                    {value.length}
+                  </div>
+                </div>
+              ) : null}
+            </DragOverlay>
           </div>
         </Selectable>
       </SortableContext>
