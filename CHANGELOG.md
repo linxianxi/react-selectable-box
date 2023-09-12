@@ -1,3 +1,9 @@
+## [1.1.1](https://github.com/linxianxi/react-selectable-box/compare/v1.1.0...v1.1.1) (2023-09-12)
+
+### Bug Fixes
+
+- add generics to SelectableProps ([#15](https://github.com/linxianxi/react-selectable-box/issues/15)) ([5c04f59](https://github.com/linxianxi/react-selectable-box/commit/5c04f59c983fd150baf09d39c65624fbc9121f52))
+
 # [1.1.0](https://github.com/linxianxi/react-selectable-box/compare/v1.0.5...v1.1.0) (2023-09-04)
 
 ### Features
