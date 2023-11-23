@@ -1,3 +1,9 @@
+# [1.2.0](https://github.com/linxianxi/react-selectable-box/compare/v1.1.1...v1.2.0) (2023-11-23)
+
+### Features
+
+- support automatic scrolling and touch events ([#17](https://github.com/linxianxi/react-selectable-box/issues/17)) ([5e8fe62](https://github.com/linxianxi/react-selectable-box/commit/5e8fe62799555d3b2aeea5c7e1cb864f0b7aac4f))
+
 ## [1.1.1](https://github.com/linxianxi/react-selectable-box/compare/v1.1.0...v1.1.1) (2023-09-12)
 
 ### Bug Fixes
