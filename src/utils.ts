@@ -1,8 +1,16 @@
+export const getClientXY = (e: MouseEvent | TouchEvent) => {
+  const obj = 'touches' in e ? e.touches[0] : e;
+  return {
+    clientX: obj.clientX,
+    clientY: obj.clientY,
+  };
+};
+
 export const isInRange = (
   element: HTMLElement | null,
   rule: 'collision' | 'inclusion',
-  container?: HTMLElement | null,
-  boxRect?: { top: number; left: number; width: number; height: number },
+  container: HTMLElement | null,
+  boxRect: { top: number; left: number; width: number; height: number },
 ) => {
   const {
     left: nodeLeft = 0,
@@ -13,10 +21,10 @@ export const isInRange = (
 
   const { top: containerTop = 0, left: containerLeft = 0 } =
     container?.getBoundingClientRect() || {};
-  const scrollLeft = container ? container.scrollLeft : 0;
-  const scrollTop = container ? container.scrollTop : 0;
+  const scrollLeft = container?.scrollLeft || 0;
+  const scrollTop = container?.scrollTop || 0;
 
-  const { top = 0, left = 0, width = 0, height = 0 } = boxRect || {};
+  const { top = 0, left = 0, width = 0, height = 0 } = boxRect;
 
   if (rule === 'collision') {
     return (

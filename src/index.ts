@@ -1,8 +1,8 @@
-import { useSelectable } from './hooks/useSelectable';
-import type { SelectableRef } from './Selectable';
 import Selectable from './Selectable';
+import useSelectable from './hooks/useSelectable';
 
-export default Selectable;
+export type { SelectableProps } from './Selectable';
 
 export { useSelectable };
-export type { SelectableRef };
+
+export default Selectable;

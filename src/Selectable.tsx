@@ -1,11 +1,14 @@
-import React, { useEffect, useImperativeHandle, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { SelectableContext } from './context';
+import useContainer from './hooks/useContainer';
 import useEvent from './hooks/useEvent';
 import useLatest from './hooks/useLatest';
 import useMergedState from './hooks/useMergedState';
+import useScroll from './hooks/useScroll';
+import { getClientXY } from './utils';
 
-interface SelectableProps<T> {
+export interface SelectableProps<T> {
   defaultValue?: T[];
   value?: T[];
   disabled?: boolean;
@@ -19,35 +22,19 @@ interface SelectableProps<T> {
   onEnd?: (selectingValue: T[], changed: { added: T[]; removed: T[] }) => void;
 }
 
-export interface SelectableRef {
-  checkScroll: () => void;
-}
-
-const defaultGetContainer = () => document.body;
-
-const getPortalContainer = (getContainer: () => HTMLElement = defaultGetContainer) => {
-  if (typeof window !== 'undefined') {
-    return getContainer();
-  }
-  return null;
-};
-
-function Selectable<T extends React.Key>(
-  {
-    defaultValue,
-    value: propsValue,
-    disabled,
-    mode = 'add',
-    children,
-    selectStartRange = 'all',
-    getContainer,
-    boxStyle,
-    boxClassName,
-    onStart,
-    onEnd,
-  }: SelectableProps<T>,
-  ref: React.ForwardedRef<SelectableRef>,
-) {
+function Selectable<T extends string | number>({
+  defaultValue,
+  value: propsValue,
+  disabled,
+  mode = 'add',
+  children,
+  selectStartRange = 'all',
+  getContainer,
+  boxStyle,
+  boxClassName,
+  onStart,
+  onEnd,
+}: SelectableProps<T>) {
   const [isDragging, setIsDragging] = useState(false);
   const [startCoords, setStartCoords] = useState({ x: 0, y: 0 });
   const [moveCoords, setMoveCoords] = useState({ x: 0, y: 0 });
@@ -55,11 +42,12 @@ function Selectable<T extends React.Key>(
   const [startTarget, setStartTarget] = useState<HTMLElement | null>(null);
   const startInside = useRef(false);
   const moveClient = useRef({ x: 0, y: 0 });
-  const [container, setContainer] = useState(() => getPortalContainer(getContainer));
   const [value, setValue] = useMergedState(defaultValue || [], {
     value: propsValue,
   });
 
+  const container = useContainer(getContainer);
+  const { smoothScroll, cancelScroll } = useScroll();
   const startCoordsRef = useLatest(startCoords);
   const isDraggingRef = useLatest(isDragging);
   const selectStartRangeRef = useLatest(selectStartRange);
@@ -69,10 +57,6 @@ function Selectable<T extends React.Key>(
   const width = isDragging ? Math.abs(startCoords.x - Math.max(0, moveCoords.x)) : 0;
   const height = isDragging ? Math.abs(startCoords.y - Math.max(0, moveCoords.y)) : 0;
   const boxRect = { top, left, width, height };
-
-  useEffect(() => {
-    setContainer(getPortalContainer(getContainer));
-  });
 
   const checkScroll = () => {
     if (isDraggingRef.current && container) {
@@ -86,14 +70,8 @@ function Selectable<T extends React.Key>(
     }
   };
 
-  useImperativeHandle(ref, () => ({
-    checkScroll,
-  }));
-
   const handleStart = useEvent(() => {
-    if (!isDraggingRef.current) {
-      onStart?.();
-    }
+    onStart?.();
   });
 
   const handleEnd = useEvent((newValue: T[]) => {
@@ -136,9 +114,9 @@ function Selectable<T extends React.Key>(
       checkScroll();
     };
 
-    const onMouseMove = (e: MouseEvent) => {
+    const onMouseMove = (e: MouseEvent | TouchEvent) => {
       if (isMouseDowning) {
-        const { clientX, clientY } = e;
+        const { clientX, clientY } = getClientXY(e);
         moveClient.current = { x: clientX, y: clientY };
         const { left, top } = container.getBoundingClientRect();
         const x = clientX - left + container.scrollLeft;
@@ -147,6 +125,7 @@ function Selectable<T extends React.Key>(
           x: Math.min(x, container.scrollWidth),
           y: Math.min(y, container.scrollHeight),
         });
+        smoothScroll(e, container);
 
         if (!isDraggingRef.current) {
           let shouldDraggingStart = true;
@@ -167,28 +146,34 @@ function Selectable<T extends React.Key>(
       }
     };
 
+    const scrollListenerElement = container === document.body ? document : container;
+
     const onMouseUp = () => {
       window.removeEventListener('mousemove', onMouseMove);
       window.removeEventListener('mouseup', onMouseUp);
-      container.removeEventListener('scroll', onScroll);
+      window.removeEventListener('touchmove', onMouseMove);
+      window.removeEventListener('touchend', onMouseUp);
+      scrollListenerElement.removeEventListener('scroll', onScroll);
 
       if (isDraggingRef.current) {
+        cancelScroll();
         setValue(selectingValue.current);
         handleEnd(selectingValue.current);
       }
       reset();
     };
 
-    const scrollListenerElement = container === document.body ? document : container;
+    const onMouseDown = (e: MouseEvent | TouchEvent) => {
+      // prevent default scroll behavior when mouse move
+      e.preventDefault();
 
-    const onMouseDown = (e: MouseEvent) => {
       isMouseDowning = true;
 
       if (selectStartRangeRef.current !== 'all') {
         setStartTarget(e.target as HTMLElement);
       }
 
-      const { clientX, clientY } = e;
+      const { clientX, clientY } = getClientXY(e);
       const { left, top } = container.getBoundingClientRect();
       setStartCoords({
         x: clientX - left + container.scrollLeft,
@@ -197,16 +182,23 @@ function Selectable<T extends React.Key>(
 
       window.addEventListener('mousemove', onMouseMove);
       window.addEventListener('mouseup', onMouseUp);
+      window.addEventListener('touchmove', onMouseMove);
+      window.addEventListener('touchend', onMouseUp);
       scrollListenerElement.addEventListener('scroll', onScroll);
     };
 
-    container.addEventListener('mousedown', onMouseDown);
+    container.addEventListener('mousedown', onMouseDown, { passive: false });
+    container.addEventListener('touchstart', onMouseDown, { passive: false });
 
     return () => {
+      cancelScroll();
       container.removeEventListener('mousedown', onMouseDown);
+      container.removeEventListener('touchstart', onMouseDown);
       scrollListenerElement.removeEventListener('scroll', onScroll);
       window.removeEventListener('mousemove', onMouseMove);
       window.removeEventListener('mouseup', onMouseUp);
+      window.removeEventListener('touchmove', onMouseMove);
+      window.removeEventListener('touchend', onMouseUp);
     };
   }, [disabled, container]);
 
@@ -234,7 +226,7 @@ function Selectable<T extends React.Key>(
             className={boxClassName}
             style={{
               position: 'absolute',
-              zIndex: 999,
+              zIndex: 9999,
               top: 0,
               left: 0,
               transform: `translate(${left}px, ${top}px)`,
@@ -250,6 +242,4 @@ function Selectable<T extends React.Key>(
   );
 }
 
-export default React.forwardRef(Selectable) as <T extends React.Key>(
-  props: SelectableProps<T> & React.RefAttributes<SelectableRef>,
-) => React.ReactElement;
+export default Selectable;
