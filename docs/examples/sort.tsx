@@ -47,7 +47,6 @@ const Item = ({
         setSelectNodeRef(ref);
         setSortNodeRef(ref);
       }}
-      className="text"
       style={{
         display: 'flex',
         justifyContent: 'center',

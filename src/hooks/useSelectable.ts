@@ -1,8 +1,8 @@
-import React, { useCallback, useContext, useEffect, useRef } from 'react';
-import { SelectableContext } from '../context';
+import React, { useCallback, useEffect, useRef } from 'react';
+import { useSelectableContext } from '../context';
 import { isInRange } from '../utils';
 
-export const useSelectable = ({
+export default function useSelectable({
   value,
   disabled,
   rule = 'collision',
@@ -10,41 +10,44 @@ export const useSelectable = ({
   value: React.Key;
   disabled?: boolean;
   rule?: 'collision' | 'inclusion';
-}) => {
-  const context = useContext(SelectableContext);
+}) {
+  const {
+    mode,
+    container,
+    boxRect,
+    isDragging,
+    value: contextValue = [],
+    startInside,
+    startTarget,
+    selectingValue,
+  } = useSelectableContext();
   const node = useRef<HTMLElement | null>(null);
 
-  const inRange = isInRange(node.current, rule, context?.container, context?.boxRect);
+  const inRange = isInRange(node.current, rule, container, boxRect);
 
-  const isDragging = !!context?.isDragging;
-
-  const isSelected = !!context?.value?.includes(value);
+  const isSelected = contextValue.includes(value);
 
   const isSelecting = isDragging && !disabled && inRange;
 
-  // 正在移除
-  const isRemoving =
-    isSelecting && isSelected && (context.mode === 'remove' || context.mode === 'reverse');
+  const isRemoving = isSelecting && isSelected && (mode === 'remove' || mode === 'reverse');
 
-  // 正在选中
-  const isAdding =
-    isSelecting && !isSelected && (context.mode === 'add' || context.mode === 'reverse');
+  const isAdding = isSelecting && !isSelected && (mode === 'add' || mode === 'reverse');
 
   useEffect(() => {
-    if (context?.startTarget && !context.startInside.current) {
-      const contain = node.current?.contains(context.startTarget);
+    if (startTarget && !startInside.current) {
+      const contain = node.current?.contains(startTarget);
       if (contain) {
-        context.startInside.current = true;
+        startInside.current = true;
       }
     }
-  }, [context?.startTarget]);
+  }, [startTarget]);
 
   useEffect(() => {
-    if (context?.selectingValue) {
+    if (selectingValue) {
       if (isSelecting) {
-        context.selectingValue.current.push(value);
+        selectingValue.current.push(value);
       } else {
-        context.selectingValue.current = context.selectingValue.current.filter((i) => i !== value);
+        selectingValue.current = selectingValue.current.filter((i) => i !== value);
       }
     }
   }, [isSelecting]);
@@ -61,4 +64,4 @@ export const useSelectable = ({
     isAdding,
     isDragging,
   };
-};
+}

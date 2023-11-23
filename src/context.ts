@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useContext } from 'react';
 
-export const SelectableContext = React.createContext<{
+interface ISelectableContext {
   selectingValue: React.MutableRefObject<React.Key[]>;
   boxRect: { top: number; left: number; width: number; height: number };
   isDragging: boolean;
@@ -9,4 +9,14 @@ export const SelectableContext = React.createContext<{
   container: HTMLElement | null;
   startTarget: HTMLElement | null;
   startInside: React.MutableRefObject<boolean>;
-} | null>(null);
+}
+
+export const SelectableContext = React.createContext<ISelectableContext>({} as ISelectableContext);
+
+export const useSelectableContext = () => {
+  const context = useContext(SelectableContext);
+  if (!context) {
+    throw new Error('Please put the selectable items in Selectable');
+  }
+  return context;
+};
