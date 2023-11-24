@@ -50,6 +50,8 @@ A React component that allows you to select elements in the drag area using the 
 
 A React component that allows you to select elements in the drag area using the mouse
 
+<img width="600" src="https://github.com/linxianxi/react-selectable-box/assets/47104575/9d463acf-c56b-48d8-b7d5-2dc02b4257e0" />
+
 ## Usage
 
 ### Install
