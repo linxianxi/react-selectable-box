@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { useSelectableContext } from '../context';
 import { isInRange } from '../utils';
 
@@ -7,13 +7,13 @@ export default function useSelectable({
   disabled,
   rule = 'collision',
 }: {
-  value: React.Key;
+  value: string | number;
   disabled?: boolean;
   rule?: 'collision' | 'inclusion';
 }) {
   const {
     mode,
-    container,
+    scrollContainer,
     boxRect,
     isDragging,
     value: contextValue = [],
@@ -23,7 +23,7 @@ export default function useSelectable({
   } = useSelectableContext();
   const node = useRef<HTMLElement | null>(null);
 
-  const inRange = isInRange(node.current, rule, container, boxRect);
+  const inRange = isInRange(node.current, rule, scrollContainer, boxRect);
 
   const isSelected = contextValue.includes(value);
 

@@ -81,7 +81,7 @@
     "concurrently": "^7",
     "cross-env": "^7",
     "dumi": "^2",
-    "dumi-theme-antd-style": "latest",
+    "dumi-theme-antd-style": "^0.29.7",
     "eslint": "^8",
     "father": "^4",
     "husky": "^8",

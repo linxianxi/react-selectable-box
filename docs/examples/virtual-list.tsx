@@ -40,7 +40,7 @@ const List: React.ForwardRefExoticComponent<
 });
 
 export default () => {
-  const [value, setValue] = useState<React.Key[]>([]);
+  const [value, setValue] = useState<string[]>([]);
 
   return (
     <Selectable

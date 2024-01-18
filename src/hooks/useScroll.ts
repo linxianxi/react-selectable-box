@@ -3,6 +3,8 @@ import { getClientXY } from '../utils';
 
 const SCROLL_STEP = 4;
 
+const EDGE_OFFSET = 1;
+
 export default function useScroll() {
   const topRaf = useRef<number | null>(null);
   const bottomRaf = useRef<number | null>(null);
@@ -49,7 +51,7 @@ export default function useScroll() {
     const { clientX, clientY } = getClientXY(e);
 
     // top
-    if (clientY < 0 || clientY < container.getBoundingClientRect().top) {
+    if (clientY - EDGE_OFFSET <= 0 || clientY <= container.getBoundingClientRect().top) {
       if (!topRaf.current) {
         const callback = () => {
           if (container.scrollTop > 0) {
@@ -66,7 +68,10 @@ export default function useScroll() {
     }
 
     // bottom
-    if (clientY > window.innerHeight || clientY > container.getBoundingClientRect().bottom) {
+    if (
+      clientY + EDGE_OFFSET >= window.innerHeight ||
+      clientY >= container.getBoundingClientRect().bottom
+    ) {
       if (!bottomRaf.current) {
         const callback = () => {
           if (container.scrollTop < container.scrollHeight - container.clientHeight) {
@@ -83,7 +88,7 @@ export default function useScroll() {
     }
 
     // left
-    if (clientX < 0 || clientX < container.getBoundingClientRect().left) {
+    if (clientX - EDGE_OFFSET <= 0 || clientX <= container.getBoundingClientRect().left) {
       if (!leftRaf.current) {
         const callback = () => {
           if (container.scrollLeft > 0) {
@@ -100,7 +105,10 @@ export default function useScroll() {
     }
 
     // right
-    if (clientX > window.innerWidth || clientX > container.getBoundingClientRect().right) {
+    if (
+      clientX + EDGE_OFFSET >= window.innerWidth ||
+      clientX >= container.getBoundingClientRect().right
+    ) {
       if (!rightRaf.current) {
         const callback = () => {
           if (container.scrollLeft < container.scrollWidth - container.clientWidth) {

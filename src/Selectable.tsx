@@ -15,11 +15,16 @@ export interface SelectableProps<T> {
   children?: React.ReactNode;
   mode?: 'add' | 'remove' | 'reverse';
   selectStartRange?: 'all' | 'inside' | 'outside';
-  getContainer?: () => HTMLElement;
+  scrollContainer?: () => HTMLElement;
+  dragContainer?: () => HTMLElement;
   boxStyle?: React.CSSProperties;
   boxClassName?: string;
   onStart?: () => void;
   onEnd?: (selectingValue: T[], changed: { added: T[]; removed: T[] }) => void;
+  /**
+   * @deprecated Use scrollContainer instead
+   */
+  getContainer?: () => HTMLElement;
 }
 
 function Selectable<T extends string | number>({
@@ -30,6 +35,8 @@ function Selectable<T extends string | number>({
   children,
   selectStartRange = 'all',
   getContainer,
+  scrollContainer: propsScrollContainer,
+  dragContainer: propsDragContainer,
   boxStyle,
   boxClassName,
   onStart,
@@ -46,7 +53,9 @@ function Selectable<T extends string | number>({
     value: propsValue,
   });
 
-  const container = useContainer(getContainer);
+  const scrollContainer = useContainer(propsScrollContainer || getContainer);
+  const dragContainer = useContainer(propsDragContainer || propsScrollContainer || getContainer);
+
   const { smoothScroll, cancelScroll } = useScroll();
   const startCoordsRef = useLatest(startCoords);
   const isDraggingRef = useLatest(isDragging);
@@ -58,14 +67,20 @@ function Selectable<T extends string | number>({
   const height = isDragging ? Math.abs(startCoords.y - Math.max(0, moveCoords.y)) : 0;
   const boxRect = { top, left, width, height };
 
-  const checkScroll = () => {
-    if (isDraggingRef.current && container) {
-      const containerRect = container.getBoundingClientRect();
-      const x = moveClient.current.x - containerRect.left + container.scrollLeft;
-      const y = moveClient.current.y - containerRect.top + container.scrollTop;
+  if (process.env.NODE_ENV === 'development' && getContainer) {
+    console.error(
+      '[react-selectable-box]: getContainer will be deprecated in the future, use scrollContainer instead',
+    );
+  }
+
+  const onScroll = () => {
+    if (isDraggingRef.current && scrollContainer) {
+      const containerRect = scrollContainer.getBoundingClientRect();
+      const x = moveClient.current.x - containerRect.left + scrollContainer.scrollLeft;
+      const y = moveClient.current.y - containerRect.top + scrollContainer.scrollTop;
       setMoveCoords({
-        x: Math.min(x, container.scrollWidth),
-        y: Math.min(y, container.scrollHeight),
+        x: Math.min(x, scrollContainer.scrollWidth),
+        y: Math.min(y, scrollContainer.scrollHeight),
       });
     }
   };
@@ -105,27 +120,25 @@ function Selectable<T extends string | number>({
       selectingValue.current = [];
     };
 
-    if (disabled || !container) {
+    if (disabled || !scrollContainer || !dragContainer) {
       reset();
       return;
     }
 
-    const onScroll = () => {
-      checkScroll();
-    };
-
     const onMouseMove = (e: MouseEvent | TouchEvent) => {
+      // prevent default scroll behavior when mouse move
+      e.preventDefault();
       if (isMouseDowning) {
         const { clientX, clientY } = getClientXY(e);
         moveClient.current = { x: clientX, y: clientY };
-        const { left, top } = container.getBoundingClientRect();
-        const x = clientX - left + container.scrollLeft;
-        const y = clientY - top + container.scrollTop;
+        const { left, top } = scrollContainer.getBoundingClientRect();
+        const x = clientX - left + scrollContainer.scrollLeft;
+        const y = clientY - top + scrollContainer.scrollTop;
         setMoveCoords({
-          x: Math.min(x, container.scrollWidth),
-          y: Math.min(y, container.scrollHeight),
+          x: Math.min(x, scrollContainer.scrollWidth),
+          y: Math.min(y, scrollContainer.scrollHeight),
         });
-        smoothScroll(e, container);
+        smoothScroll(e, scrollContainer);
 
         if (!isDraggingRef.current) {
           let shouldDraggingStart = true;
@@ -146,7 +159,7 @@ function Selectable<T extends string | number>({
       }
     };
 
-    const scrollListenerElement = container === document.body ? document : container;
+    const scrollListenerElement = scrollContainer === document.body ? document : scrollContainer;
 
     const onMouseUp = () => {
       window.removeEventListener('mousemove', onMouseMove);
@@ -164,9 +177,6 @@ function Selectable<T extends string | number>({
     };
 
     const onMouseDown = (e: MouseEvent | TouchEvent) => {
-      // prevent default scroll behavior when mouse move
-      e.preventDefault();
-
       isMouseDowning = true;
 
       if (selectStartRangeRef.current !== 'all') {
@@ -174,33 +184,33 @@ function Selectable<T extends string | number>({
       }
 
       const { clientX, clientY } = getClientXY(e);
-      const { left, top } = container.getBoundingClientRect();
+      const { left, top } = scrollContainer.getBoundingClientRect();
       setStartCoords({
-        x: clientX - left + container.scrollLeft,
-        y: clientY - top + container.scrollTop,
+        x: clientX - left + scrollContainer.scrollLeft,
+        y: clientY - top + scrollContainer.scrollTop,
       });
 
-      window.addEventListener('mousemove', onMouseMove);
+      window.addEventListener('mousemove', onMouseMove, { passive: false });
       window.addEventListener('mouseup', onMouseUp);
-      window.addEventListener('touchmove', onMouseMove);
+      window.addEventListener('touchmove', onMouseMove, { passive: false });
       window.addEventListener('touchend', onMouseUp);
       scrollListenerElement.addEventListener('scroll', onScroll);
     };
 
-    container.addEventListener('mousedown', onMouseDown, { passive: false });
-    container.addEventListener('touchstart', onMouseDown, { passive: false });
+    dragContainer.addEventListener('mousedown', onMouseDown);
+    dragContainer.addEventListener('touchstart', onMouseDown);
 
     return () => {
       cancelScroll();
-      container.removeEventListener('mousedown', onMouseDown);
-      container.removeEventListener('touchstart', onMouseDown);
+      dragContainer.removeEventListener('mousedown', onMouseDown);
+      dragContainer.removeEventListener('touchstart', onMouseDown);
       scrollListenerElement.removeEventListener('scroll', onScroll);
       window.removeEventListener('mousemove', onMouseMove);
       window.removeEventListener('mouseup', onMouseUp);
       window.removeEventListener('touchmove', onMouseMove);
       window.removeEventListener('touchend', onMouseUp);
     };
-  }, [disabled, container]);
+  }, [disabled, scrollContainer, dragContainer]);
 
   const contextValue = useMemo(
     () => ({
@@ -209,18 +219,18 @@ function Selectable<T extends string | number>({
       isDragging,
       boxRect,
       mode,
-      container,
+      scrollContainer,
       startTarget,
       startInside,
     }),
-    [value, isDragging, top, left, width, height, mode, container, startTarget],
+    [value, isDragging, top, left, width, height, mode, scrollContainer, startTarget],
   );
 
   return (
     <SelectableContext.Provider value={contextValue}>
       {children}
       {isDragging &&
-        container &&
+        scrollContainer &&
         createPortal(
           <div
             className={boxClassName}
@@ -236,7 +246,7 @@ function Selectable<T extends string | number>({
               ...boxStyle,
             }}
           />,
-          container,
+          scrollContainer,
         )}
     </SelectableContext.Provider>
   );
