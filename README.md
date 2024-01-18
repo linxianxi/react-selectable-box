@@ -64,6 +64,56 @@ pnpm i react-selectable-box
 
 [docs](https://linxianxi.github.io/react-selectable-box/)
 
+### Example
+
+```typescript
+import Selectable, { useSelectable } from 'react-selectable-box';
+
+const list: number[] = [];
+for (let i = 0; i < 200; i++) {
+  list.push(i);
+}
+
+const App = () => {
+  return (
+    <Selectable>
+      <div
+        style={{
+          display: 'flex',
+          flexWrap: 'wrap',
+          gap: 20,
+          padding: 20,
+          border: '1px solid #ccc',
+        }}
+      >
+        {list.map((i) => (
+          <Item key={i} value={i} />
+        ))}
+      </div>
+    </Selectable>
+  );
+};
+
+const Item = ({ value }: { value: number }) => {
+  const { setNodeRef, isSelected, isAdding } = useSelectable({
+    value,
+  });
+
+  return (
+    <div
+      ref={setNodeRef}
+      style={{
+        width: 50,
+        height: 50,
+        borderRadius: 4,
+        border: isAdding ? '1px solid #1677ff' : undefined,
+        background: isSelected ? '#1677ff' : '#ccc',
+      }}
+    />
+  );
+};
+```
+
 ## Changelog
 
 [CHANGELOG](https://linxianxi.github.io/react-selectable-box/changelog)
