@@ -1,5 +1,5 @@
 import { Descriptions, Radio, Switch } from 'antd';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import Selectable, { useSelectable } from 'react-selectable-box';
 
 const list: string[] = [];
@@ -28,7 +28,7 @@ const Item = ({ value, rule }: { value: string; rule: 'collision' | 'inclusion' 
 };
 
 export default () => {
-  const [value, setValue] = useState<React.Key[]>([]);
+  const [value, setValue] = useState<string[]>([]);
   const [mode, setMode] = useState<'add' | 'remove' | 'reverse'>('add');
   const [selectStartRange, setSelectStartRange] = useState<'all' | 'inside' | 'outside'>('all');
   const [enable, setEnable] = useState(true);
@@ -94,6 +94,7 @@ export default () => {
         disabled={!enable}
         mode={mode}
         value={value}
+        dragContainer={() => document.getElementById('drag-container') as HTMLElement}
         selectStartRange={selectStartRange}
         onEnd={(selectingValue, { added, removed }) => {
           const result = value.concat(added).filter((i) => !removed.includes(i));
@@ -101,6 +102,7 @@ export default () => {
         }}
       >
         <div
+          id="drag-container"
           style={{
             display: 'flex',
             flexWrap: 'wrap',

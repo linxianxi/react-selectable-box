@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import Selectable, { useSelectable } from 'react-selectable-box';
 
 const list: string[] = [];
@@ -26,7 +26,7 @@ const Item = ({ value }: { value: string }) => {
 };
 
 export default () => {
-  const [value, setValue] = useState<React.Key[]>([]);
+  const [value, setValue] = useState<string[]>([]);
 
   return (
     <Selectable

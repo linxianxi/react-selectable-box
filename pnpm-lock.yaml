@@ -1,5 +1,9 @@
 lockfileVersion: '6.0'
 
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
+
 devDependencies:
   '@commitlint/cli':
     specifier: ^17
@@ -62,8 +66,8 @@ devDependencies:
     specifier: ^2
     version: 2.2.5(@babel/core@7.22.10)(@types/node@20.4.7)(@types/react@18.2.20)(eslint@8.47.0)(postcss@8.4.27)(prettier@2.8.8)(react-dom@18.2.0)(react@18.2.0)(styled-components@6.0.7)(stylelint@15.10.2)(typescript@5.1.6)(webpack@5.88.2)
   dumi-theme-antd-style:
-    specifier: latest
-    version: 0.29.4(@types/react@18.2.20)(dumi@2.2.5)(react-dom@18.2.0)(react@18.2.0)
+    specifier: ^0.29.7
+    version: 0.29.7(@types/react@18.2.20)(dumi@2.2.5)(react-dom@18.2.0)(react@18.2.0)
   eslint:
     specifier: ^8
     version: 8.47.0
@@ -7174,8 +7178,8 @@ packages:
     resolution: {integrity: sha512-a/Y5lf0G6gwsEQ9hop/n03CcjmHsGBk384Cz/AEX6mRYrfSpUx/lQvP9HLoXkCzScl9PL1sSmLPnMkgaXDCZLA==}
     dev: true
 
-  /dumi-theme-antd-style@0.29.4(@types/react@18.2.20)(dumi@2.2.5)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-VwoM38IETkriHY9Q7zro0yu+lyStq3t4A2q7TJUFUVUCU/5WWgB67lrfWxW+T13uHmzgBkEDYifzBVafYGPB9w==}
+  /dumi-theme-antd-style@0.29.7(@types/react@18.2.20)(dumi@2.2.5)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-SQODA/EeveBKcDP6I0fUqUsNg2qRIpOR8t+Jt3GIAhycj6Ddu5WKaUuv5hKnSj75i5j9JdyBT+OneCZcQUxR6A==}
     peerDependencies:
       dumi: ^2.0.0
       react: '>=16.8'
@@ -12349,6 +12353,7 @@ packages:
   /pify@4.0.1:
     resolution: {integrity: sha512-uB80kBFb/tfd68bVleG9T5GGsGPjJrLAUpR5PZIrhBnIaRTQRjqdJSsIKkOP6OAIFbj7GOrcudc5pNjZ+geV2g==}
     engines: {node: '>=6'}
+    requiresBuild: true
     dev: true
 
   /pino-abstract-transport@0.5.0:
@@ -13030,6 +13035,7 @@ packages:
 
   /prr@1.0.1:
     resolution: {integrity: sha512-yPw4Sng1gWghHQWj0B3ZggWUm4qVbPwPFcRG8KyxiU7J2OHFSoEHKS+EZ3fv5l1t9CyCiop6l/ZYeWbrgoQejw==}
+    requiresBuild: true
     dev: true
     optional: true
 
@@ -14724,6 +14730,7 @@ packages:
 
   /shiki-es@0.2.0:
     resolution: {integrity: sha512-RbRMD+IuJJseSZljDdne9ThrUYrwBwJR04FvN4VXpfsU3MNID5VJGHLAD5je/HGThCyEKNgH+nEkSFEWKD7C3Q==}
+    deprecated: Please migrate to https://github.com/antfu/shikiji
     dev: true
 
   /shortid@2.2.16:

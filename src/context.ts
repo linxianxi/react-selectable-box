@@ -1,12 +1,12 @@
 import React, { useContext } from 'react';
 
 interface ISelectableContext {
-  selectingValue: React.MutableRefObject<React.Key[]>;
+  selectingValue: React.MutableRefObject<(string | number)[]>;
   boxRect: { top: number; left: number; width: number; height: number };
   isDragging: boolean;
-  value: React.Key[] | undefined;
+  value: (string | number)[] | undefined;
   mode: 'add' | 'remove' | 'reverse';
-  container: HTMLElement | null;
+  scrollContainer: HTMLElement | null;
   startTarget: HTMLElement | null;
   startInside: React.MutableRefObject<boolean>;
 }
