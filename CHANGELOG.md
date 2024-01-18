@@ -1,3 +1,9 @@
+# [1.3.0](https://github.com/linxianxi/react-selectable-box/compare/v1.2.0...v1.3.0) (2024-01-18)
+
+### Features
+
+- support dragContainer、scrollContainer, deprecate getContainer ([#19](https://github.com/linxianxi/react-selectable-box/issues/19)) ([77f4acb](https://github.com/linxianxi/react-selectable-box/commit/77f4acba359dc6b51e72a18027bbc8d5d76d6634))
+
 # [1.2.0](https://github.com/linxianxi/react-selectable-box/compare/v1.1.1...v1.2.0) (2023-11-23)
 
 ### Features
