@@ -35,7 +35,7 @@ export default () => {
         const result = value.concat(added).filter((i) => !removed.includes(i));
         setValue(result);
       }}
-      scrollContainer={() => document.getElementById('.scroll-container') as HTMLElement}
+      scrollContainer={() => document.getElementById('scroll-container') as HTMLElement}
     >
       <div
         id="scroll-container"
