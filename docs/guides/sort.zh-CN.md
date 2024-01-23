@@ -1,7 +1,7 @@
 ---
-title: sort
+title: 排序
 group:
-  title: examples
+  title: 示例
   order: 1
 order: 8
 ---

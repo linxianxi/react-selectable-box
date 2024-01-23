@@ -1,7 +1,7 @@
 ---
-title: item disabled
+title: 单个禁用
 group:
-  title: examples
+  title: 示例
   order: 1
 order: 1
 ---
