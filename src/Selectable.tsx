@@ -27,21 +27,28 @@ export interface SelectableProps<T> {
   getContainer?: () => HTMLElement;
 }
 
-function Selectable<T extends string | number>({
-  defaultValue,
-  value: propsValue,
-  disabled,
-  mode = 'add',
-  children,
-  selectStartRange = 'all',
-  getContainer,
-  scrollContainer: propsScrollContainer,
-  dragContainer: propsDragContainer,
-  boxStyle,
-  boxClassName,
-  onStart,
-  onEnd,
-}: SelectableProps<T>) {
+export interface SelectableRef {
+  cancel: () => void;
+}
+
+function Selectable<T extends string | number>(
+  {
+    defaultValue,
+    value: propsValue,
+    disabled,
+    mode = 'add',
+    children,
+    selectStartRange = 'all',
+    getContainer,
+    scrollContainer: propsScrollContainer,
+    dragContainer: propsDragContainer,
+    boxStyle,
+    boxClassName,
+    onStart,
+    onEnd,
+  }: SelectableProps<T>,
+  ref: React.ForwardedRef<SelectableRef>,
+) {
   const [isDragging, setIsDragging] = useState(false);
   const [startCoords, setStartCoords] = useState({ x: 0, y: 0 });
   const [moveCoords, setMoveCoords] = useState({ x: 0, y: 0 });
@@ -52,6 +59,7 @@ function Selectable<T extends string | number>({
   const [value, setValue] = useMergedState(defaultValue || [], {
     value: propsValue,
   });
+  const [isCanceled, setIsCanceled] = useState(false);
 
   const scrollContainer = useContainer(propsScrollContainer || getContainer);
   const dragContainer = useContainer(propsDragContainer || propsScrollContainer || getContainer);
@@ -72,6 +80,13 @@ function Selectable<T extends string | number>({
       '[react-selectable-box]: getContainer will be deprecated in the future, use scrollContainer instead',
     );
   }
+
+  React.useImperativeHandle(ref, () => ({
+    cancel: () => {
+      setIsCanceled(true);
+      setIsDragging(false);
+    },
+  }));
 
   const onScroll = () => {
     if (isDraggingRef.current && scrollContainer) {
@@ -114,13 +129,14 @@ function Selectable<T extends string | number>({
 
     const reset = () => {
       setIsDragging(false);
+      setIsCanceled(false);
       setStartTarget(null);
       isMouseDowning = false;
       startInside.current = false;
       selectingValue.current = [];
     };
 
-    if (disabled || !scrollContainer || !dragContainer) {
+    if (disabled || !scrollContainer || !dragContainer || isCanceled) {
       reset();
       return;
     }
@@ -210,7 +226,7 @@ function Selectable<T extends string | number>({
       window.removeEventListener('touchmove', onMouseMove);
       window.removeEventListener('touchend', onMouseUp);
     };
-  }, [disabled, scrollContainer, dragContainer]);
+  }, [disabled, scrollContainer, dragContainer, isCanceled]);
 
   const contextValue = useMemo(
     () => ({
@@ -252,4 +268,6 @@ function Selectable<T extends string | number>({
   );
 }
 
-export default Selectable;
+export default React.forwardRef(Selectable) as <T>(
+  props: SelectableProps<T> & React.RefAttributes<SelectableRef>,
+) => React.ReactElement;
