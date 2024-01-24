@@ -1,3 +1,9 @@
+# [1.4.0](https://github.com/linxianxi/react-selectable-box/compare/v1.3.0...v1.4.0) (2024-01-24)
+
+### Features
+
+- add cancel method ([#22](https://github.com/linxianxi/react-selectable-box/issues/22)) ([212911c](https://github.com/linxianxi/react-selectable-box/commit/212911c293db48a1da89f37ba660ea8dd063bfab))
+
 # [1.3.0](https://github.com/linxianxi/react-selectable-box/compare/v1.2.0...v1.3.0) (2024-01-18)
 
 ### Features
