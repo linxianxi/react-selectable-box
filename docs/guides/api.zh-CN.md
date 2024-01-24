@@ -47,3 +47,9 @@ const { setNodeRef, isSelected, isAdding, isRemoving, isSelecting, isDragging } 
 | isAdding    | 当前是否正在添加   | boolean                                |
 | isRemoving  | 当前是否正在删除   | boolean                                |
 | isSelecting | 当前是否被框选     | boolean                                |
+
+### 方法
+
+| 名称   | 说明     | 类型       |
+| ------ | -------- | ---------- |
+| cancel | 取消选择 | () => void |

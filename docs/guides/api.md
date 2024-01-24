@@ -33,13 +33,13 @@ const { setNodeRef, isSelected, isAdding, isRemoving, isSelecting, isDragging } 
 });
 ```
 
-| 参数     | 说明                                        | 类型                       | 默认值      |
+| Property | Description                                 | Type                       | Default     |
 | -------- | ------------------------------------------- | -------------------------- | ----------- |
 | value    | The value of the current selectable element | string \| number           | -           |
 | disabled | Whether to disable                          | boolean                    | false       |
 | rule     | Selection rule                              | `collision` \| `inclusion` | `collision` |
 
-| 参数        | 说明                                   | 类型                                   |
+| Property    | 说明                                   | 类型                                   |
 | ----------- | -------------------------------------- | -------------------------------------- |
 | setNodeRef  | Set the selectable element             | (element: HTMLElement \| null) => void |
 | isDragging  | Whether it is currently dragging       | boolean                                |
@@ -47,3 +47,9 @@ const { setNodeRef, isSelected, isAdding, isRemoving, isSelecting, isDragging } 
 | isAdding    | Whether it is currently being added    | boolean                                |
 | isRemoving  | Whether it is currently being removed  | boolean                                |
 | isSelecting | Whether it is currently being selected | boolean                                |
+
+### Methods
+
+| Name   | Description      | Type       |
+| ------ | ---------------- | ---------- |
+| cancel | cancel selection | () => void |
