@@ -1,3 +1,9 @@
+# [1.5.0](https://github.com/linxianxi/react-selectable-box/compare/v1.4.0...v1.5.0) (2024-01-26)
+
+### Features
+
+- add items to optimize virtual list ([#23](https://github.com/linxianxi/react-selectable-box/issues/23)) ([bbb929d](https://github.com/linxianxi/react-selectable-box/commit/bbb929d8bd28166bdbaa981ac1ad36be52815140))
+
 # [1.4.0](https://github.com/linxianxi/react-selectable-box/compare/v1.3.0...v1.4.0) (2024-01-24)
 
 ### Features
