@@ -45,7 +45,8 @@ export default () => {
   return (
     <Selectable
       value={value}
-      getContainer={() => document.querySelector('.container') as HTMLElement}
+      items={list}
+      scrollContainer={() => document.querySelector('.container') as HTMLElement}
       onEnd={(selectingValue, { added, removed }) => {
         const result = value.concat(added).filter((i) => !removed.includes(i));
         setValue(result);

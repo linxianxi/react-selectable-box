@@ -113,7 +113,6 @@ export default () => {
         <Selectable
           value={value}
           disabled={!!activeId}
-          getContainer={() => document.querySelector('.container') as HTMLElement}
           onEnd={(selectingValue, { added, removed }) => {
             const result = value.concat(added).filter((i) => !removed.includes(i));
             setValue(result);
@@ -128,7 +127,6 @@ export default () => {
               padding: 20,
               border: '1px solid #ccc',
             }}
-            className="container"
           >
             {items.map((i) => (
               <Item
