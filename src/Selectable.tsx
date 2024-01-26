@@ -62,6 +62,7 @@ function Selectable<T extends string | number>(
   const [value, setValue] = useMergedState(defaultValue || [], {
     value: propsValue,
   });
+  const boxRef = useRef<HTMLDivElement | null>(null);
   const unmountItemsInfo = useRef<UnmountItemsInfoType<T>>(new Map());
   const scrollInfo = useRef({ scrollTop: 0, scrollLeft: 0 });
   const [isCanceled, setIsCanceled] = useState(false);
@@ -78,7 +79,7 @@ function Selectable<T extends string | number>(
   const left = Math.max(0, Math.min(startCoords.x, moveCoords.x));
   const width = isDragging ? Math.abs(startCoords.x - Math.max(0, moveCoords.x)) : 0;
   const height = isDragging ? Math.abs(startCoords.y - Math.max(0, moveCoords.y)) : 0;
-  const boxRect = useMemo(() => ({ top, left, width, height }), [top, left, width, height]);
+  const boxPosition = useMemo(() => ({ top, left, width, height }), [top, left, width, height]);
 
   const virtual = !!items;
 
@@ -126,15 +127,16 @@ function Selectable<T extends string | number>(
         unmountItemsInfo.current.forEach((info, item) => {
           if (items.includes(item)) {
             const inRange = isInRange(
+              info.rule,
               {
                 width: info.rect.width,
                 height: info.rect.height,
                 top: info.rect.top + info.scrollTop - scrollInfo.current.scrollTop,
                 left: info.rect.left + info.scrollLeft - scrollInfo.current.scrollLeft,
               },
-              info.rule,
               scrollContainer,
-              boxRect,
+              boxPosition,
+              boxRef,
             );
             if (inRange && !info.disabled) {
               selectingValue.current.push(item);
@@ -276,7 +278,7 @@ function Selectable<T extends string | number>(
       value,
       selectingValue,
       isDragging,
-      boxRect,
+      boxPosition,
       mode,
       scrollContainer,
       startTarget,
@@ -284,17 +286,19 @@ function Selectable<T extends string | number>(
       unmountItemsInfo,
       scrollInfo,
       virtual,
+      boxRef,
     }),
     [
       value,
       isDragging,
-      boxRect,
+      boxPosition,
       mode,
       scrollContainer,
       startTarget,
       unmountItemsInfo,
       scrollInfo,
       virtual,
+      boxRef,
     ],
   );
 
@@ -305,6 +309,7 @@ function Selectable<T extends string | number>(
         scrollContainer &&
         createPortal(
           <div
+            ref={boxRef}
             className={boxClassName}
             style={{
               position: 'absolute',

@@ -34,11 +34,11 @@ const { setNodeRef, isSelected, isAdding, isRemoving, isSelecting, isDragging } 
 });
 ```
 
-| Property | Description                                 | Type                       | Default     |
-| -------- | ------------------------------------------- | -------------------------- | ----------- |
-| value    | The value of the current selectable element | string \| number           | -           |
-| disabled | Whether to disable                          | boolean                    | false       |
-| rule     | Selection rule                              | `collision` \| `inclusion` | `collision` |
+| Property | Description                                                                                                                                 | Type                                                                                                                                              | Default     |
+| -------- | ------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| value    | The value of the current selectable element                                                                                                 | string \| number                                                                                                                                  | -           |
+| disabled | Whether to disable                                                                                                                          | boolean                                                                                                                                           | false       |
+| rule     | Selection rule, collision, inclusion or customization. When customizing, the `boxPosition` is relative to the position of `scrollContainer` | `collision` \| `inclusion` \| ( boxElement: HTMLDivElement, boxPosition: { left: number; top: number; width: number; height: number }) => boolean | `collision` |
 
 | Property    | 说明                                   | 类型                                   |
 | ----------- | -------------------------------------- | -------------------------------------- |
