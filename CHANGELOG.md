@@ -1,3 +1,9 @@
+# [1.6.0](https://github.com/linxianxi/react-selectable-box/compare/v1.5.0...v1.6.0) (2024-01-26)
+
+### Features
+
+- support custom rule ([#24](https://github.com/linxianxi/react-selectable-box/issues/24)) ([dc4cd07](https://github.com/linxianxi/react-selectable-box/commit/dc4cd07ca7631577b516a6f1c195592ff3a508ef))
+
 # [1.5.0](https://github.com/linxianxi/react-selectable-box/compare/v1.4.0...v1.5.0) (2024-01-26)
 
 ### Features
