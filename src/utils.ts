@@ -7,38 +7,36 @@ export const getClientXY = (e: MouseEvent | TouchEvent) => {
 };
 
 export const isInRange = (
-  element: HTMLElement | null,
+  rect: { left: number; top: number; width: number; height: number } | undefined,
   rule: 'collision' | 'inclusion',
-  container: HTMLElement | null,
+  scrollContainer: HTMLElement | null,
   boxRect: { top: number; left: number; width: number; height: number },
 ) => {
-  const {
-    left: nodeLeft = 0,
-    top: nodeTop = 0,
-    width: nodeWidth = 0,
-    height: nodeHeight = 0,
-  } = element?.getBoundingClientRect() || {};
+  if (!rect || !scrollContainer) {
+    return false;
+  }
 
-  const { top: containerTop = 0, left: containerLeft = 0 } =
-    container?.getBoundingClientRect() || {};
-  const scrollLeft = container?.scrollLeft || 0;
-  const scrollTop = container?.scrollTop || 0;
+  const { left: rectLeft, top: rectTop, width: rectWidth, height: rectHeight } = rect;
 
-  const { top = 0, left = 0, width = 0, height = 0 } = boxRect;
+  const { top: containerTop, left: containerLeft } = scrollContainer.getBoundingClientRect();
+  const scrollLeft = scrollContainer.scrollLeft;
+  const scrollTop = scrollContainer.scrollTop;
+
+  const { top: boxTop, left: boxLeft, width: boxWidth, height: boxHeight } = boxRect;
 
   if (rule === 'collision') {
     return (
-      nodeLeft - containerLeft + scrollLeft < left + width &&
-      nodeLeft - containerLeft + scrollLeft + nodeWidth > left &&
-      nodeTop - containerTop + scrollTop < top + height &&
-      nodeTop - containerTop + scrollTop + nodeHeight > top
+      rectLeft - containerLeft + scrollLeft < boxLeft + boxWidth &&
+      rectLeft + rectWidth - containerLeft + scrollLeft > boxLeft &&
+      rectTop - containerTop + scrollTop < boxTop + boxHeight &&
+      rectTop + rectHeight - containerTop + scrollTop > boxTop
     );
   }
 
   return (
-    nodeLeft - containerLeft + scrollLeft >= left &&
-    nodeLeft - containerLeft + scrollLeft + nodeWidth <= left + width &&
-    nodeTop - containerTop + scrollTop >= top &&
-    nodeTop - containerTop + scrollTop + nodeHeight <= top + height
+    rectLeft - containerLeft + scrollLeft >= boxLeft &&
+    rectLeft + rectWidth - containerLeft + scrollLeft <= boxLeft + boxWidth &&
+    rectTop - containerTop + scrollTop >= boxTop &&
+    rectTop + rectHeight - containerTop + scrollTop <= boxTop + boxHeight
   );
 };

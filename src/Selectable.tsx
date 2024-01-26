@@ -1,16 +1,18 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { SelectableContext } from './context';
+import { SelectableContext, UnmountItemsInfoType } from './context';
 import useContainer from './hooks/useContainer';
 import useEvent from './hooks/useEvent';
 import useLatest from './hooks/useLatest';
 import useMergedState from './hooks/useMergedState';
 import useScroll from './hooks/useScroll';
-import { getClientXY } from './utils';
+import { getClientXY, isInRange } from './utils';
 
 export interface SelectableProps<T> {
   defaultValue?: T[];
   value?: T[];
+  /** support virtual */
+  items?: T[];
   disabled?: boolean;
   children?: React.ReactNode;
   mode?: 'add' | 'remove' | 'reverse';
@@ -35,6 +37,7 @@ function Selectable<T extends string | number>(
   {
     defaultValue,
     value: propsValue,
+    items,
     disabled,
     mode = 'add',
     children,
@@ -59,6 +62,8 @@ function Selectable<T extends string | number>(
   const [value, setValue] = useMergedState(defaultValue || [], {
     value: propsValue,
   });
+  const unmountItemsInfo = useRef<UnmountItemsInfoType<T>>(new Map());
+  const scrollInfo = useRef({ scrollTop: 0, scrollLeft: 0 });
   const [isCanceled, setIsCanceled] = useState(false);
 
   const scrollContainer = useContainer(propsScrollContainer || getContainer);
@@ -73,7 +78,9 @@ function Selectable<T extends string | number>(
   const left = Math.max(0, Math.min(startCoords.x, moveCoords.x));
   const width = isDragging ? Math.abs(startCoords.x - Math.max(0, moveCoords.x)) : 0;
   const height = isDragging ? Math.abs(startCoords.y - Math.max(0, moveCoords.y)) : 0;
-  const boxRect = { top, left, width, height };
+  const boxRect = useMemo(() => ({ top, left, width, height }), [top, left, width, height]);
+
+  const virtual = !!items;
 
   if (process.env.NODE_ENV === 'development' && getContainer) {
     console.error(
@@ -88,14 +95,23 @@ function Selectable<T extends string | number>(
     },
   }));
 
-  const onScroll = () => {
+  const onScroll = (e: Event) => {
     if (isDraggingRef.current && scrollContainer) {
+      const target = e.target as HTMLElement;
+      scrollInfo.current = { scrollTop: target.scrollTop, scrollLeft: target.scrollLeft };
+
       const containerRect = scrollContainer.getBoundingClientRect();
-      const x = moveClient.current.x - containerRect.left + scrollContainer.scrollLeft;
-      const y = moveClient.current.y - containerRect.top + scrollContainer.scrollTop;
+      const x = Math.min(
+        moveClient.current.x - containerRect.left + scrollContainer.scrollLeft,
+        scrollContainer.scrollWidth,
+      );
+      const y = Math.min(
+        moveClient.current.y - containerRect.top + scrollContainer.scrollTop,
+        scrollContainer.scrollHeight,
+      );
       setMoveCoords({
-        x: Math.min(x, scrollContainer.scrollWidth),
-        y: Math.min(y, scrollContainer.scrollHeight),
+        x,
+        y,
       });
     }
   };
@@ -104,12 +120,35 @@ function Selectable<T extends string | number>(
     onStart?.();
   });
 
-  const handleEnd = useEvent((newValue: T[]) => {
+  const handleEnd = useEvent(() => {
     if (onEnd) {
+      if (virtual) {
+        unmountItemsInfo.current.forEach((info, item) => {
+          if (items.includes(item)) {
+            const inRange = isInRange(
+              {
+                width: info.rect.width,
+                height: info.rect.height,
+                top: info.rect.top + info.scrollTop - scrollInfo.current.scrollTop,
+                left: info.rect.left + info.scrollLeft - scrollInfo.current.scrollLeft,
+              },
+              info.rule,
+              scrollContainer,
+              boxRect,
+            );
+            if (inRange && !info.disabled) {
+              selectingValue.current.push(item);
+            } else {
+              selectingValue.current = selectingValue.current.filter((i) => i !== item);
+            }
+          }
+        });
+      }
+
       const added: T[] = [];
       const removed: T[] = [];
 
-      newValue.forEach((i) => {
+      selectingValue.current.forEach((i) => {
         if (value?.includes(i)) {
           if (mode === 'remove' || mode === 'reverse') {
             removed.push(i);
@@ -120,7 +159,8 @@ function Selectable<T extends string | number>(
           }
         }
       });
-      onEnd(newValue, { added, removed });
+
+      onEnd(selectingValue.current, { added, removed });
     }
   });
 
@@ -148,11 +188,14 @@ function Selectable<T extends string | number>(
         const { clientX, clientY } = getClientXY(e);
         moveClient.current = { x: clientX, y: clientY };
         const { left, top } = scrollContainer.getBoundingClientRect();
-        const x = clientX - left + scrollContainer.scrollLeft;
-        const y = clientY - top + scrollContainer.scrollTop;
+        const x = Math.min(
+          clientX - left + scrollContainer.scrollLeft,
+          scrollContainer.scrollWidth,
+        );
+        const y = Math.min(clientY - top + scrollContainer.scrollTop, scrollContainer.scrollHeight);
         setMoveCoords({
-          x: Math.min(x, scrollContainer.scrollWidth),
-          y: Math.min(y, scrollContainer.scrollHeight),
+          x,
+          y,
         });
         smoothScroll(e, scrollContainer);
 
@@ -187,7 +230,7 @@ function Selectable<T extends string | number>(
       if (isDraggingRef.current) {
         cancelScroll();
         setValue(selectingValue.current);
-        handleEnd(selectingValue.current);
+        handleEnd();
       }
       reset();
     };
@@ -238,8 +281,21 @@ function Selectable<T extends string | number>(
       scrollContainer,
       startTarget,
       startInside,
+      unmountItemsInfo,
+      scrollInfo,
+      virtual,
     }),
-    [value, isDragging, top, left, width, height, mode, scrollContainer, startTarget],
+    [
+      value,
+      isDragging,
+      boxRect,
+      mode,
+      scrollContainer,
+      startTarget,
+      unmountItemsInfo,
+      scrollInfo,
+      virtual,
+    ],
   );
 
   return (

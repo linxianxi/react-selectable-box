@@ -31,7 +31,7 @@ export default () => {
   const [value, setValue] = useState<string[]>([]);
   const [mode, setMode] = useState<'add' | 'remove' | 'reverse'>('add');
   const [selectStartRange, setSelectStartRange] = useState<'all' | 'inside' | 'outside'>('all');
-  const [enable, setEnable] = useState(true);
+  const [disabled, setDisabled] = useState(false);
   const [rule, setRule] = useState<'collision' | 'inclusion'>('collision');
 
   return (
@@ -39,7 +39,7 @@ export default () => {
       <Descriptions
         column={1}
         items={[
-          { label: 'enable', children: <Switch checked={enable} onChange={setEnable} /> },
+          { label: 'disabled', children: <Switch checked={disabled} onChange={setDisabled} /> },
           {
             label: 'selectStartRange',
             children: (
@@ -91,7 +91,7 @@ export default () => {
       />
 
       <Selectable
-        disabled={!enable}
+        disabled={disabled}
         mode={mode}
         value={value}
         dragContainer={() => document.getElementById('drag-container') as HTMLElement}
