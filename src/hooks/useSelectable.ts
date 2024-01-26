@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { useSelectableContext } from '../context';
+import { Rule, useSelectableContext } from '../context';
 import { isInRange } from '../utils';
 import useUpdateEffect from './useUpdateEffect';
 
@@ -10,12 +10,12 @@ export default function useSelectable({
 }: {
   value: string | number;
   disabled?: boolean;
-  rule?: 'collision' | 'inclusion';
+  rule?: Rule;
 }) {
   const {
     mode,
     scrollContainer,
-    boxRect,
+    boxPosition,
     isDragging,
     value: contextValue = [],
     startInside,
@@ -24,16 +24,20 @@ export default function useSelectable({
     unmountItemsInfo,
     scrollInfo,
     virtual,
+    boxRef,
   } = useSelectableContext();
   const node = useRef<HTMLElement | null>(null);
-  const rect = useRef<DOMRect>();
+  const rectRef = useRef<DOMRect>();
 
   const [inRange, setInRange] = useState(false);
 
   useEffect(() => {
-    rect.current = node.current?.getBoundingClientRect();
-    setInRange(isInRange(rect.current, rule, scrollContainer, boxRect));
-  }, [rect.current, rule, scrollContainer, boxRect]);
+    if (isDragging) {
+      const nodeRect = node.current?.getBoundingClientRect();
+      rectRef.current = nodeRect;
+      setInRange(isInRange(rule, nodeRect, scrollContainer, boxPosition, boxRef));
+    }
+  }, [rectRef.current, rule, scrollContainer, boxPosition, isDragging]);
 
   const isSelected = contextValue.includes(value);
 
@@ -72,10 +76,10 @@ export default function useSelectable({
       unmountItemsInfo.current.delete(value);
 
       return () => {
-        if (rect.current) {
+        if (rectRef.current) {
           unmountItemsInfo.current.set(value, {
             rule,
-            rect: rect.current,
+            rect: rectRef.current,
             disabled,
             scrollLeft: scrollInfo.current.scrollLeft,
             scrollTop: scrollInfo.current.scrollTop,

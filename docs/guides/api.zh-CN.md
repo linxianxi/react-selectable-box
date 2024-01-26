@@ -34,11 +34,11 @@ const { setNodeRef, isSelected, isAdding, isRemoving, isSelecting, isDragging } 
 });
 ```
 
-| 参数     | 说明                 | 类型                       | 默认值      |
-| -------- | -------------------- | -------------------------- | ----------- |
-| value    | 当前可框选元素的值   | string \| number           | -           |
-| disabled | 是否禁用             | boolean                    | false       |
-| rule     | 选中规则，碰撞或包含 | `collision` \| `inclusion` | `collision` |
+| 参数     | 说明                                                                                     | 类型                                                                                                                                              | 默认值      |
+| -------- | ---------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| value    | 当前可框选元素的值                                                                       | string \| number                                                                                                                                  | -           |
+| disabled | 是否禁用                                                                                 | boolean                                                                                                                                           | false       |
+| rule     | 选中规则，碰撞、包含或自定义，自定义时的 `boxPosition` 是相对于 `scrollContainer` 的位置 | `collision` \| `inclusion` \| ( boxElement: HTMLDivElement, boxPosition: { left: number; top: number; width: number; height: number }) => boolean | `collision` |
 
 | 参数        | 说明               | 类型                                   |
 | ----------- | ------------------ | -------------------------------------- |

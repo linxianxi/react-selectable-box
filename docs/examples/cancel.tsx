@@ -49,7 +49,6 @@ export default () => {
       ref={selectableRef}
       dragContainer={() => document.getElementById('drag-container') as HTMLElement}
       onEnd={(selectingValue, { added, removed }) => {
-        console.log('onEnd');
         const result = value.concat(added).filter((i) => !removed.includes(i));
         setValue(result);
       }}

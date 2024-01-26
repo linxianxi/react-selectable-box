@@ -1,3 +1,5 @@
+import { Rule } from './context';
+
 export const getClientXY = (e: MouseEvent | TouchEvent) => {
   const obj = 'touches' in e ? e.touches[0] : e;
   return {
@@ -7,11 +9,16 @@ export const getClientXY = (e: MouseEvent | TouchEvent) => {
 };
 
 export const isInRange = (
+  rule: Rule,
   rect: { left: number; top: number; width: number; height: number } | undefined,
-  rule: 'collision' | 'inclusion',
   scrollContainer: HTMLElement | null,
   boxRect: { top: number; left: number; width: number; height: number },
+  boxRef: React.MutableRefObject<HTMLDivElement | null>,
 ) => {
+  if (typeof rule === 'function' && boxRef.current) {
+    return rule(boxRef.current, boxRect);
+  }
+
   if (!rect || !scrollContainer) {
     return false;
   }
