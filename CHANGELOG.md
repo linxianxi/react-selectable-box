@@ -1,3 +1,9 @@
+# [1.7.0](https://github.com/linxianxi/react-selectable-box/compare/v1.6.0...v1.7.0) (2024-01-31)
+
+### Features
+
+- value support any、add compareFn ([#25](https://github.com/linxianxi/react-selectable-box/issues/25)) ([548b38f](https://github.com/linxianxi/react-selectable-box/commit/548b38fd83ceafd4866d2c47229769b5025880fe))
+
 # [1.6.0](https://github.com/linxianxi/react-selectable-box/compare/v1.5.0...v1.6.0) (2024-01-26)
 
 ### Features
