@@ -21,6 +21,7 @@ export interface SelectableProps<T> {
   dragContainer?: () => HTMLElement;
   boxStyle?: React.CSSProperties;
   boxClassName?: string;
+  compareFn?: (a: T, b: T) => boolean;
   onStart?: () => void;
   onEnd?: (selectingValue: T[], changed: { added: T[]; removed: T[] }) => void;
   /**
@@ -32,6 +33,8 @@ export interface SelectableProps<T> {
 export interface SelectableRef {
   cancel: () => void;
 }
+
+const defaultCompareFn = (a: any, b: any) => a === b;
 
 function Selectable<T>(
   {
@@ -47,6 +50,7 @@ function Selectable<T>(
     dragContainer: propsDragContainer,
     boxStyle,
     boxClassName,
+    compareFn = defaultCompareFn,
     onStart,
     onEnd,
   }: SelectableProps<T>,
@@ -96,27 +100,6 @@ function Selectable<T>(
     },
   }));
 
-  const onScroll = (e: Event) => {
-    if (isDraggingRef.current && scrollContainer) {
-      const target = e.target as HTMLElement;
-      scrollInfo.current = { scrollTop: target.scrollTop, scrollLeft: target.scrollLeft };
-
-      const containerRect = scrollContainer.getBoundingClientRect();
-      const x = Math.min(
-        moveClient.current.x - containerRect.left + scrollContainer.scrollLeft,
-        scrollContainer.scrollWidth,
-      );
-      const y = Math.min(
-        moveClient.current.y - containerRect.top + scrollContainer.scrollTop,
-        scrollContainer.scrollHeight,
-      );
-      setMoveCoords({
-        x,
-        y,
-      });
-    }
-  };
-
   const handleStart = useEvent(() => {
     onStart?.();
   });
@@ -151,7 +134,7 @@ function Selectable<T>(
       const removed: T[] = [];
 
       selectingValue.current.forEach((i) => {
-        if (value?.includes(i)) {
+        if (value?.some((val) => compareFn(val, i))) {
           if (mode === 'remove' || mode === 'reverse') {
             removed.push(i);
           }
@@ -222,6 +205,27 @@ function Selectable<T>(
 
     const scrollListenerElement = scrollContainer === document.body ? document : scrollContainer;
 
+    const onScroll = (e: Event) => {
+      if (isDraggingRef.current && scrollContainer) {
+        const target = e.target as HTMLElement;
+        scrollInfo.current = { scrollTop: target.scrollTop, scrollLeft: target.scrollLeft };
+
+        const containerRect = scrollContainer.getBoundingClientRect();
+        const x = Math.min(
+          moveClient.current.x - containerRect.left + scrollContainer.scrollLeft,
+          scrollContainer.scrollWidth,
+        );
+        const y = Math.min(
+          moveClient.current.y - containerRect.top + scrollContainer.scrollTop,
+          scrollContainer.scrollHeight,
+        );
+        setMoveCoords({
+          x,
+          y,
+        });
+      }
+    };
+
     const onMouseUp = () => {
       window.removeEventListener('mousemove', onMouseMove);
       window.removeEventListener('mouseup', onMouseUp);
@@ -287,6 +291,7 @@ function Selectable<T>(
       scrollInfo,
       virtual,
       boxRef,
+      compareFn,
     }),
     [
       value,
@@ -299,6 +304,7 @@ function Selectable<T>(
       scrollInfo,
       virtual,
       boxRef,
+      compareFn,
     ],
   );
 

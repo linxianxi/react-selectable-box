@@ -35,6 +35,7 @@ interface ISelectableContext<T> {
   }>;
   virtual: boolean;
   boxRef: React.MutableRefObject<HTMLDivElement | null>;
+  compareFn: (a: T, b: T) => boolean;
 }
 
 export const SelectableContext = React.createContext<ISelectableContext<any>>(

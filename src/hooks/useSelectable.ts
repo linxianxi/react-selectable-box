@@ -1,21 +1,18 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Rule, useSelectableContext } from '../context';
 import { isInRange } from '../utils';
-import useEvent from './useEvent';
 import useUpdateEffect from './useUpdateEffect';
 
 interface UseSelectableProps<T> {
   value: T;
   disabled?: boolean;
   rule?: Rule;
-  compareFn?: (item: T, value: T) => boolean;
 }
 
 export default function useSelectable<T>({
   value,
   disabled,
   rule = 'collision',
-  compareFn,
 }: UseSelectableProps<T>) {
   const {
     mode,
@@ -30,6 +27,7 @@ export default function useSelectable<T>({
     scrollInfo,
     virtual,
     boxRef,
+    compareFn,
   } = useSelectableContext();
   const node = useRef<HTMLElement | null>(null);
   const rectRef = useRef<DOMRect>();
@@ -44,16 +42,7 @@ export default function useSelectable<T>({
     }
   }, [rectRef.current, rule, scrollContainer, boxPosition, isDragging]);
 
-  const compare = useEvent((item: T, value: T) => {
-    if (compareFn) {
-      return compareFn(item, value);
-    }
-    return false;
-  });
-
-  const isSelected = compare
-    ? contextValue.some((i) => compare(i, value))
-    : contextValue.includes(value);
+  const isSelected = contextValue.some((i) => compareFn(i, value));
 
   const isSelecting = isDragging && !disabled && inRange;
 
@@ -79,9 +68,7 @@ export default function useSelectable<T>({
       if (isSelecting) {
         selectingValue.current.push(value);
       } else {
-        selectingValue.current = selectingValue.current.filter((i) =>
-          compare ? !compare(i, value) : i !== value,
-        );
+        selectingValue.current = selectingValue.current.filter((i) => !compareFn(i, value));
       }
     }
   }, [isSelecting]);
