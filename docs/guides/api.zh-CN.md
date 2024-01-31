@@ -21,6 +21,7 @@ nav: 快速上手
 | dragContainer    | 指定可以开始拖拽的容器， 如果设置了 `scrollContainer` 请不要设置，因为在可滚动容器中这两个应该相等 | () => HTMLElement                                                 | scrollContainer |
 | boxStyle         | 框选框的样式                                                                                       | React.CSSProperties                                               | -               |
 | boxClassName     | 框选框的类名                                                                                       | string                                                            | -               |
+| compareFn        | 因为 value 支持任意类型，所以你可能需要自定义函数进行比较，默认使用 `===`                          | (item: any, value: any) => boolean                                | ===             |
 | onStart          | 框选开始时触发的事件                                                                               | () => void                                                        | -               |
 | onEnd            | 框选结束时触发的事件                                                                               | (selectingValue: any[], { added: any[], removed: any[] }) => void | -               |
 
@@ -34,12 +35,11 @@ const { setNodeRef, isSelected, isAdding, isRemoving, isSelecting, isDragging } 
 });
 ```
 
-| 参数      | 说明                                                                                     | 类型                                                                                                                                              | 默认值      |
-| --------- | ---------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
-| value     | 当前可框选元素的值                                                                       | any                                                                                                                                               | -           |
-| disabled  | 是否禁用                                                                                 | boolean                                                                                                                                           | false       |
-| rule      | 选中规则，碰撞、包含或自定义，自定义时的 `boxPosition` 是相对于 `scrollContainer` 的位置 | `collision` \| `inclusion` \| ( boxElement: HTMLDivElement, boxPosition: { left: number; top: number; width: number; height: number }) => boolean | `collision` |
-| compareFn | 因为 value 支持任意类型，所以你可能需要自定义函数进行比较，默认使用 `===`                | (item: any, value: any) => boolean                                                                                                                | ===         |
+| 参数     | 说明                                                                                     | 类型                                                                                                                                              | 默认值      |
+| -------- | ---------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| value    | 当前可框选元素的值                                                                       | any                                                                                                                                               | -           |
+| disabled | 是否禁用                                                                                 | boolean                                                                                                                                           | false       |
+| rule     | 选中规则，碰撞、包含或自定义，自定义时的 `boxPosition` 是相对于 `scrollContainer` 的位置 | `collision` \| `inclusion` \| ( boxElement: HTMLDivElement, boxPosition: { left: number; top: number; width: number; height: number }) => boolean | `collision` |
 
 | 参数        | 说明               | 类型                                   |
 | ----------- | ------------------ | -------------------------------------- |
