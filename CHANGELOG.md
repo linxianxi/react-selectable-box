@@ -1,3 +1,9 @@
+## [1.7.1](https://github.com/linxianxi/react-selectable-box/compare/v1.7.0...v1.7.1) (2024-01-31)
+
+### Bug Fixes
+
+- add compareFn to Selectable、remove useSelectable compareFn ([#26](https://github.com/linxianxi/react-selectable-box/issues/26)) ([711acce](https://github.com/linxianxi/react-selectable-box/commit/711acce693a5ea593231dfaf996a30278e17fcc2))
+
 # [1.7.0](https://github.com/linxianxi/react-selectable-box/compare/v1.6.0...v1.7.0) (2024-01-31)
 
 ### Features
