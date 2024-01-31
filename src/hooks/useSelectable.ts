@@ -1,17 +1,22 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Rule, useSelectableContext } from '../context';
 import { isInRange } from '../utils';
+import useEvent from './useEvent';
 import useUpdateEffect from './useUpdateEffect';
 
-export default function useSelectable({
+interface UseSelectableProps<T> {
+  value: T;
+  disabled?: boolean;
+  rule?: Rule;
+  compareFn?: (item: T, value: T) => boolean;
+}
+
+export default function useSelectable<T>({
   value,
   disabled,
   rule = 'collision',
-}: {
-  value: string | number;
-  disabled?: boolean;
-  rule?: Rule;
-}) {
+  compareFn,
+}: UseSelectableProps<T>) {
   const {
     mode,
     scrollContainer,
@@ -39,7 +44,16 @@ export default function useSelectable({
     }
   }, [rectRef.current, rule, scrollContainer, boxPosition, isDragging]);
 
-  const isSelected = contextValue.includes(value);
+  const compare = useEvent((item: T, value: T) => {
+    if (compareFn) {
+      return compareFn(item, value);
+    }
+    return false;
+  });
+
+  const isSelected = compare
+    ? contextValue.some((i) => compare(i, value))
+    : contextValue.includes(value);
 
   const isSelecting = isDragging && !disabled && inRange;
 
@@ -65,7 +79,9 @@ export default function useSelectable({
       if (isSelecting) {
         selectingValue.current.push(value);
       } else {
-        selectingValue.current = selectingValue.current.filter((i) => i !== value);
+        selectingValue.current = selectingValue.current.filter((i) =>
+          compare ? !compare(i, value) : i !== value,
+        );
       }
     }
   }, [isSelecting]);
@@ -94,10 +110,10 @@ export default function useSelectable({
     if (virtual) {
       const info = unmountItemsInfo.current.get(value);
       if (info) {
-        unmountItemsInfo.current.set(value, { ...info, disabled });
+        unmountItemsInfo.current.set(value, { ...info, disabled, rule });
       }
     }
-  }, [virtual, disabled]);
+  }, [virtual, disabled, rule]);
 
   return {
     setNodeRef,
