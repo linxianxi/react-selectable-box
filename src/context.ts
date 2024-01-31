@@ -1,7 +1,5 @@
 import React, { useContext } from 'react';
 
-type ValueType = string | number;
-
 export type Rule =
   | 'collision'
   | 'inclusion'
@@ -39,8 +37,8 @@ interface ISelectableContext<T> {
   boxRef: React.MutableRefObject<HTMLDivElement | null>;
 }
 
-export const SelectableContext = React.createContext<ISelectableContext<ValueType>>(
-  {} as ISelectableContext<ValueType>,
+export const SelectableContext = React.createContext<ISelectableContext<any>>(
+  {} as ISelectableContext<any>,
 );
 
 export const useSelectableContext = () => {

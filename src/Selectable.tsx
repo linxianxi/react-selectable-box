@@ -33,7 +33,7 @@ export interface SelectableRef {
   cancel: () => void;
 }
 
-function Selectable<T extends string | number>(
+function Selectable<T>(
   {
     defaultValue,
     value: propsValue,
