@@ -151,6 +151,7 @@ function Selectable<T>(
 
   useEffect(() => {
     let isMouseDowning = false;
+    let scrollContainerOriginPosition = '';
 
     const reset = () => {
       setIsDragging(false);
@@ -197,6 +198,10 @@ function Selectable<T>(
           // https://github.com/linxianxi/react-selectable-box/issues/5
           if (shouldDraggingStart && (boxWidth > 1 || boxHeight > 1)) {
             setIsDragging(true);
+            scrollContainerOriginPosition = scrollContainer.style.position;
+            if (scrollContainer !== document.body && !scrollContainerOriginPosition) {
+              scrollContainer.style.position = 'relative';
+            }
             handleStart();
           }
         }
@@ -234,6 +239,7 @@ function Selectable<T>(
       scrollListenerElement.removeEventListener('scroll', onScroll);
 
       if (isDraggingRef.current) {
+        scrollContainer.style.position = scrollContainerOriginPosition;
         cancelScroll();
         setValue(selectingValue.current);
         handleEnd();
@@ -266,6 +272,7 @@ function Selectable<T>(
     dragContainer.addEventListener('touchstart', onMouseDown);
 
     return () => {
+      scrollContainer.style.position = scrollContainerOriginPosition;
       cancelScroll();
       dragContainer.removeEventListener('mousedown', onMouseDown);
       dragContainer.removeEventListener('touchstart', onMouseDown);
