@@ -1,3 +1,9 @@
+# [1.8.0](https://github.com/linxianxi/react-selectable-box/compare/v1.7.1...v1.8.0) (2024-02-01)
+
+### Features
+
+- automatically add position to scrollContainer during frame selection ([#27](https://github.com/linxianxi/react-selectable-box/issues/27)) ([b769781](https://github.com/linxianxi/react-selectable-box/commit/b769781a3d8e56e702451d85b78ee8a4bd253f4c))
+
 ## [1.7.1](https://github.com/linxianxi/react-selectable-box/compare/v1.7.0...v1.7.1) (2024-01-31)
 
 ### Bug Fixes
