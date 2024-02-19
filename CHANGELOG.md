@@ -1,3 +1,9 @@
+## [1.8.1](https://github.com/linxianxi/react-selectable-box/compare/v1.8.0...v1.8.1) (2024-02-19)
+
+### Bug Fixes
+
+- compareFn should be used when items exists ([#28](https://github.com/linxianxi/react-selectable-box/issues/28)) ([0902fbc](https://github.com/linxianxi/react-selectable-box/commit/0902fbc48a04c364716478f46e9d098ab77d3147))
+
 # [1.8.0](https://github.com/linxianxi/react-selectable-box/compare/v1.7.1...v1.8.0) (2024-02-01)
 
 ### Features
