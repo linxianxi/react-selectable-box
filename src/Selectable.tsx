@@ -34,7 +34,9 @@ export interface SelectableRef {
   cancel: () => void;
 }
 
-const defaultCompareFn = (a: any, b: any) => a === b;
+function defaultCompareFn<T>(a: T, b: T) {
+  return a === b;
+}
 
 function Selectable<T>(
   {
@@ -50,7 +52,7 @@ function Selectable<T>(
     dragContainer: propsDragContainer,
     boxStyle,
     boxClassName,
-    compareFn = defaultCompareFn,
+    compareFn = defaultCompareFn<T>,
     onStart,
     onEnd,
   }: SelectableProps<T>,
@@ -124,7 +126,7 @@ function Selectable<T>(
             if (inRange && !info.disabled) {
               selectingValue.current.push(item);
             } else {
-              selectingValue.current = selectingValue.current.filter((i) => i !== item);
+              selectingValue.current = selectingValue.current.filter((i) => !compareFn(i, item));
             }
           }
         });
