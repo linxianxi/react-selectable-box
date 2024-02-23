@@ -35,12 +35,10 @@ export default function useSelectable<T>({
   const [inRange, setInRange] = useState(false);
 
   useEffect(() => {
-    if (isDragging) {
-      const nodeRect = node.current?.getBoundingClientRect();
-      rectRef.current = nodeRect;
-      setInRange(isInRange(rule, nodeRect, scrollContainer, boxPosition, boxRef));
-    }
-  }, [rectRef.current, rule, scrollContainer, boxPosition, isDragging]);
+    const nodeRect = node.current?.getBoundingClientRect();
+    rectRef.current = nodeRect;
+    setInRange(isInRange(rule, nodeRect, scrollContainer, boxPosition, boxRef));
+  }, [rectRef.current, rule, scrollContainer, boxPosition]);
 
   const isSelected = contextValue.some((i) => compareFn(i, value));
 
