@@ -1,3 +1,9 @@
+## [1.8.2](https://github.com/linxianxi/react-selectable-box/compare/v1.8.1...v1.8.2) (2024-02-23)
+
+### Bug Fixes
+
+- isSelecting should be correct when starting box selection ([#30](https://github.com/linxianxi/react-selectable-box/issues/30)) ([9a6b90e](https://github.com/linxianxi/react-selectable-box/commit/9a6b90efcd0072e24a17fcb2a8b21db385fde782))
+
 ## [1.8.1](https://github.com/linxianxi/react-selectable-box/compare/v1.8.0...v1.8.1) (2024-02-19)
 
 ### Bug Fixes
