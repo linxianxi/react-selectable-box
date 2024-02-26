@@ -1,5 +1,6 @@
 ---
 name: 'Feature request ✨'
+about: 'Feature request ✨'
 title: '👑 [Feature]'
 labels: '👑 Feature'
 assignees: ''

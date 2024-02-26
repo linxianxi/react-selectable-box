@@ -1,5 +1,6 @@
 ---
 name: 'Questions or need help ❓'
+about: 'Questions or need help ❓'
 title: '🧐[Question]'
 labels: '🧐 Question'
 assignees: ''
