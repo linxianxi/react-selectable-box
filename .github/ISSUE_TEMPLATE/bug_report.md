@@ -1,46 +1,48 @@
 ---
-name: '报告Bug 🐛'
-about: 报告 react-selectable-box 的 bug
+name: 'Report a Bug 🐛'
 title: '🐛[BUG]'
 labels: '🐛 BUG'
 assignees: ''
 ---
 
-### 🐛 bug 描述
+### 🐛 Description
 
 <!--
-详细地描述 bug，让大家都能理解
+description
 -->
 
-### 📷 复现步骤
+### 💻 Reproduction link
+
+<!-- [demo](https://codesandbox.io/p/sandbox/modern-architecture-g85777?file=%2Findex.html) -->
+
+### 📷 Steps to reproduce
 
 <!--
-清晰描述复现步骤，让别人也能看到问题
+1. xxx
+2. xxx
+3. xxx
 -->
 
-### 🏞 期望结果
+### 🏞 What is expected?
 
 <!--
-描述你原本期望看到的结果
+description
 -->
 
-### 💻 复现代码
+### What is actually happening?
 
 <!--
-提供可复现的代码，仓库，或线上示例
-(可在下方 codesandbox 链接中添加你的最小可复现 demo)
+description
 -->
 
-<!-- [可复现 demo](https://codesandbox.io/s/html2ksetch-demo-m53be?file=/src/Demo.tsx) -->
+### © Version information
 
-### © 版本信息
+- react-selectable-fast
+- browser
+- system
 
-- react-selectable-fast 版本: [e.g. 1.0.0]
-- 浏览器环境
-- 开发环境 [e.g. mac OS]
-
-### 🚑 其他信息
+### 🚑 Other information
 
 <!--
-如截图等其他信息可以贴在这里
+Other information
 -->

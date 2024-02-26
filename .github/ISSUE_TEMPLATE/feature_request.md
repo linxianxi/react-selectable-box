@@ -1,25 +1,24 @@
 ---
-name: '功能需求 ✨'
-about: 对 react-selectable-box 的需求或建议
-title: '👑 [需求]'
+name: 'Feature request ✨'
+title: '👑 [Feature]'
 labels: '👑 Feature'
 assignees: ''
 ---
 
-### 🥰 需求描述
+### 🥰 Description
 
 <!--
-详细地描述问题，让大家都能理解
+description
 -->
 
-### 🧐 解决方案
+### 🧐 Solution
 
 <!--
-如果你有解决方案，在这里清晰地阐述
+Solution
 -->
 
-### 🚑 其他信息
+### 🚑 Other information
 
 <!--
-如截图等其他信息可以贴在这里
+Other information
 -->
