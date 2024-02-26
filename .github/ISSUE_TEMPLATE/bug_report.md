@@ -1,5 +1,6 @@
 ---
 name: 'Report a Bug 🐛'
+about: 'Report a Bug 🐛'
 title: '🐛[BUG]'
 labels: '🐛 BUG'
 assignees: ''
