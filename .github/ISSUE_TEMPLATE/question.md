@@ -1,25 +1,22 @@
 ---
-name: '疑问或需要帮助 ❓'
-about: 对 react-selectable-box 使用的疑问或需要帮助
-title: '🧐[问题]'
+name: 'Questions or need help ❓'
+title: '🧐[Question]'
 labels: '🧐 Question'
 assignees: ''
 ---
 
-### 🧐 问题描述
+### 🧐 Description
 
 <!--
-详细地描述问题，让大家都能理解
+description
 -->
 
-### 💻 示例代码
+### 💻 Reproduction link
+
+<!-- [demo](https://codesandbox.io/p/sandbox/modern-architecture-g85777?file=%2Findex.html) -->
+
+### 🚑 Other information
 
 <!--
-如果有必要，展示代码，线上示例，或仓库
--->
-
-### 🚑 其他信息
-
-<!--
-如截图等其他信息可以贴在这里
+Other information
 -->
