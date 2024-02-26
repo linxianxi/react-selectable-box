@@ -57,7 +57,11 @@ A React component that allows you to select elements in the drag area using the 
 ### Install
 
 ```bash
-pnpm i react-selectable-box
+npm i react-selectable-box
+// or
+yarn add react-selectable-box
+// or
+pnpm add react-selectable-box
 ```
 
 ### Docs
