@@ -22,7 +22,7 @@ export interface SelectableProps<T> {
   boxStyle?: React.CSSProperties;
   boxClassName?: string;
   compareFn?: (a: T, b: T) => boolean;
-  onStart?: () => void;
+  onStart?: (event: MouseEvent | TouchEvent) => void;
   onEnd?: (selectingValue: T[], changed: { added: T[]; removed: T[] }) => void;
   /**
    * @deprecated Use scrollContainer instead
@@ -102,8 +102,8 @@ function Selectable<T>(
     },
   }));
 
-  const handleStart = useEvent(() => {
-    onStart?.();
+  const handleStart = useEvent((event: MouseEvent | TouchEvent) => {
+    onStart?.(event);
   });
 
   const handleEnd = useEvent(() => {
@@ -204,7 +204,7 @@ function Selectable<T>(
             if (scrollContainer !== document.body && !scrollContainerOriginPosition) {
               scrollContainer.style.position = 'relative';
             }
-            handleStart();
+            handleStart(e);
           }
         }
       }

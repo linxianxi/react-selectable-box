@@ -1,9 +1,9 @@
 import { useRef, useState } from 'react';
 import Selectable, { useSelectable } from 'react-selectable-box';
 
-const list: string[] = [];
+const list: number[] = [];
 for (let i = 0; i < 200; i++) {
-  list.push(String(i));
+  list.push(i);
 }
 
 const checkCircleCollision = (
@@ -48,7 +48,7 @@ const checkCircleCollision = (
 
 const itemSize = 50;
 
-const Item = ({ value }: { value: string }) => {
+const Item = ({ value }: { value: number }) => {
   const itemRef = useRef<HTMLDivElement | null>(null);
   const { setNodeRef, isSelected, isAdding, isRemoving } = useSelectable({
     value,
@@ -77,18 +77,24 @@ const Item = ({ value }: { value: string }) => {
         itemRef.current = ref;
       }}
       style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        color: 'white',
         width: itemSize,
         height: itemSize,
         borderRadius: '50%',
         border: isAdding ? '1px solid #1677ff' : undefined,
         background: isRemoving ? 'red' : isSelected ? '#1677ff' : '#ccc',
       }}
-    />
+    >
+      {value}
+    </div>
   );
 };
 
 export default () => {
-  const [value, setValue] = useState<string[]>([]);
+  const [value, setValue] = useState<number[]>([]);
 
   return (
     <Selectable

@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
 import Selectable, { useSelectable } from 'react-selectable-box';
 
-const list: string[] = [];
+const list: number[] = [];
 for (let i = 0; i < 200; i++) {
-  list.push(String(i));
+  list.push(i);
 }
 
-const Item = ({ value }: { value: string }) => {
+const Item = ({ value }: { value: number }) => {
   const { setNodeRef, isSelected, isAdding, isRemoving } = useSelectable({
     value,
   });
@@ -15,18 +15,24 @@ const Item = ({ value }: { value: string }) => {
     <div
       ref={setNodeRef}
       style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        color: 'white',
         width: 50,
         height: 50,
         borderRadius: 4,
         border: isAdding ? '1px solid #1677ff' : undefined,
         background: isRemoving ? 'red' : isSelected ? '#1677ff' : '#ccc',
       }}
-    />
+    >
+      {value}
+    </div>
   );
 };
 
 export default () => {
-  const [value, setValue] = useState<string[]>([]);
+  const [value, setValue] = useState<number[]>([]);
   const [mode, setMode] = useState<'add' | 'remove'>('add');
 
   useEffect(() => {

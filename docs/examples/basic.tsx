@@ -2,12 +2,12 @@ import { Descriptions, Radio, Switch } from 'antd';
 import { useState } from 'react';
 import Selectable, { useSelectable } from 'react-selectable-box';
 
-const list: string[] = [];
+const list: number[] = [];
 for (let i = 0; i < 200; i++) {
-  list.push(String(i));
+  list.push(i);
 }
 
-const Item = ({ value, rule }: { value: string; rule: 'collision' | 'inclusion' }) => {
+const Item = ({ value, rule }: { value: number; rule: 'collision' | 'inclusion' }) => {
   const { setNodeRef, isSelected, isAdding, isRemoving } = useSelectable({
     value,
     rule,
@@ -17,18 +17,24 @@ const Item = ({ value, rule }: { value: string; rule: 'collision' | 'inclusion' 
     <div
       ref={setNodeRef}
       style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        color: 'white',
         width: 50,
         height: 50,
         borderRadius: 4,
         border: isAdding ? '1px solid #1677ff' : undefined,
         background: isRemoving ? 'red' : isSelected ? '#1677ff' : '#ccc',
       }}
-    />
+    >
+      {value}
+    </div>
   );
 };
 
 export default () => {
-  const [value, setValue] = useState<string[]>([]);
+  const [value, setValue] = useState<number[]>([]);
   const [mode, setMode] = useState<'add' | 'remove' | 'reverse'>('add');
   const [selectStartRange, setSelectStartRange] = useState<'all' | 'inside' | 'outside'>('all');
   const [disabled, setDisabled] = useState(false);

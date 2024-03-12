@@ -2,12 +2,12 @@ import React, { HTMLAttributes, useState } from 'react';
 import Selectable, { useSelectable } from 'react-selectable-box';
 import { VirtuosoGrid } from 'react-virtuoso';
 
-const list: string[] = [];
+const list: number[] = [];
 for (let i = 0; i < 2002; i++) {
-  list.push(String(i));
+  list.push(i);
 }
 
-const Item = ({ value }: { value: string }) => {
+const Item = ({ value }: { value: number }) => {
   const { setNodeRef, isSelected, isAdding, isRemoving } = useSelectable({
     value,
   });
@@ -19,6 +19,7 @@ const Item = ({ value }: { value: string }) => {
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
+        color: 'white',
         width: 50,
         height: 50,
         borderRadius: 4,
@@ -40,7 +41,7 @@ const List: React.ForwardRefExoticComponent<
 });
 
 export default () => {
-  const [value, setValue] = useState<string[]>([]);
+  const [value, setValue] = useState<number[]>([]);
 
   return (
     <Selectable
