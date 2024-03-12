@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import Selectable, { useSelectable } from 'react-selectable-box';
 
-const list: string[] = [];
+const list: number[] = [];
 for (let i = 0; i < 200; i++) {
-  list.push(String(i));
+  list.push(i);
 }
 
-const Item = ({ value, onClick }: { value: string; onClick: (isSelected: boolean) => void }) => {
+const Item = ({ value, onClick }: { value: number; onClick: (isSelected: boolean) => void }) => {
   const { setNodeRef, isSelected, isAdding, isRemoving } = useSelectable({
     value,
   });
@@ -15,6 +15,10 @@ const Item = ({ value, onClick }: { value: string; onClick: (isSelected: boolean
     <div
       ref={setNodeRef}
       style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        color: 'white',
         width: 50,
         height: 50,
         borderRadius: 4,
@@ -22,12 +26,14 @@ const Item = ({ value, onClick }: { value: string; onClick: (isSelected: boolean
         background: isRemoving ? 'red' : isSelected ? '#1677ff' : '#ccc',
       }}
       onClick={() => onClick(isSelected)}
-    />
+    >
+      {value}
+    </div>
   );
 };
 
 export default () => {
-  const [value, setValue] = useState<string[]>([]);
+  const [value, setValue] = useState<number[]>([]);
 
   return (
     <Selectable

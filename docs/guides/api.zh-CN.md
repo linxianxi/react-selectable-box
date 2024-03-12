@@ -22,7 +22,7 @@ nav: 快速上手
 | boxStyle         | 框选框的样式                                                                                       | React.CSSProperties                                               | -               |
 | boxClassName     | 框选框的类名                                                                                       | string                                                            | -               |
 | compareFn        | 因为 value 支持任意类型，所以你可能需要自定义函数进行比较，默认使用 `===`                          | (item: any, value: any) => boolean                                | ===             |
-| onStart          | 框选开始时触发的事件                                                                               | () => void                                                        | -               |
+| onStart          | 框选开始时触发的事件                                                                               | (event: MouseEvent \| TouchEvent) => void                         | -               |
 | onEnd            | 框选结束时触发的事件                                                                               | (selectingValue: any[], { added: any[], removed: any[] }) => void | -               |
 
 ### useSelectable

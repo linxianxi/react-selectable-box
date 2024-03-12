@@ -22,7 +22,7 @@ nav: Get Started
 | boxStyle         | Selection box style                                                                                                                                         | React.CSSProperties                                               | -               |
 | boxClassName     | Selection box className                                                                                                                                     | string                                                            | -               |
 | compareFn        | Because value supports any type, you may need to define a custom function for comparison. The default is `===`                                              | (item: any, value: any) => boolean                                |
-| onStart          | Called when selection starts                                                                                                                                | () => void                                                        | -               |
+| onStart          | Called when selection starts                                                                                                                                | (event: MouseEvent \| TouchEvent) => void                         | -               |
 | onEnd            | Called when selection ends                                                                                                                                  | (selectingValue: any[], { added: any[], removed: any[] }) => void | -               |
 
 ### useSelectable

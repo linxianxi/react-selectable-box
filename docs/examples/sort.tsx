@@ -52,6 +52,7 @@ const Item = ({
         justifyContent: 'center',
         alignItems: 'center',
         position: 'relative',
+        color: 'white',
         width: 50,
         height: 50,
         borderRadius: 4,
