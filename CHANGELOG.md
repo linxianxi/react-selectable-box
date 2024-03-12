@@ -1,3 +1,9 @@
+# [1.9.0](https://github.com/linxianxi/react-selectable-box/compare/v1.8.2...v1.9.0) (2024-03-12)
+
+### Features
+
+- add event param to onStart ([#34](https://github.com/linxianxi/react-selectable-box/issues/34)) ([1d144d1](https://github.com/linxianxi/react-selectable-box/commit/1d144d10a8c72522c6bcb1f489c6885cd5ae356a))
+
 ## [1.8.2](https://github.com/linxianxi/react-selectable-box/compare/v1.8.1...v1.8.2) (2024-02-23)
 
 ### Bug Fixes
