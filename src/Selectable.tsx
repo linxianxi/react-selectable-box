@@ -170,8 +170,6 @@ function Selectable<T>(
     }
 
     const onMouseMove = (e: MouseEvent | TouchEvent) => {
-      // prevent default scroll behavior when mouse move
-      e.preventDefault();
       if (isMouseDowning) {
         const { clientX, clientY } = getClientXY(e);
         moveClient.current = { x: clientX, y: clientY };
@@ -250,6 +248,8 @@ function Selectable<T>(
     };
 
     const onMouseDown = (e: MouseEvent | TouchEvent) => {
+      // disable text selection, but it will prevent default scroll behavior when mouse move, so we used `useScroll`
+      e.preventDefault();
       isMouseDowning = true;
 
       if (selectStartRangeRef.current !== 'all') {
