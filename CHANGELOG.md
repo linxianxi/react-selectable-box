@@ -1,3 +1,9 @@
+## [1.9.1](https://github.com/linxianxi/react-selectable-box/compare/v1.9.0...v1.9.1) (2024-06-07)
+
+### Bug Fixes
+
+- do not select text when selecting ([#35](https://github.com/linxianxi/react-selectable-box/issues/35)) ([427636f](https://github.com/linxianxi/react-selectable-box/commit/427636f26cc62ee79da38e6efb7c37e0677a90d2))
+
 # [1.9.0](https://github.com/linxianxi/react-selectable-box/compare/v1.8.2...v1.9.0) (2024-03-12)
 
 ### Features
