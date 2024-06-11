@@ -275,7 +275,9 @@ function Selectable<T>(
     dragContainer.addEventListener('touchstart', onMouseDown);
 
     return () => {
-      scrollContainer.style.position = scrollContainerOriginPosition;
+      if (scrollContainerOriginPosition) {
+        scrollContainer.style.position = scrollContainerOriginPosition;
+      }
       cancelScroll();
       dragContainer.removeEventListener('mousedown', onMouseDown);
       dragContainer.removeEventListener('touchstart', onMouseDown);
