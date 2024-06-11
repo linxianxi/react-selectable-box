@@ -1,3 +1,9 @@
+## [1.9.2](https://github.com/linxianxi/react-selectable-box/compare/v1.9.1...v1.9.2) (2024-06-11)
+
+### Bug Fixes
+
+- use getComputedStyle to get scrollContainer position ([#36](https://github.com/linxianxi/react-selectable-box/issues/36)) ([819a937](https://github.com/linxianxi/react-selectable-box/commit/819a93773712f3ce6525b30b8151ed947e0aa1e8))
+
 ## [1.9.1](https://github.com/linxianxi/react-selectable-box/compare/v1.9.0...v1.9.1) (2024-06-07)
 
 ### Bug Fixes
