@@ -1,3 +1,9 @@
+## [1.9.3](https://github.com/linxianxi/react-selectable-box/compare/v1.9.2...v1.9.3) (2024-06-11)
+
+### Bug Fixes
+
+- scrollContainerOriginPosition should be corrected when effect return ([#37](https://github.com/linxianxi/react-selectable-box/issues/37)) ([49ba781](https://github.com/linxianxi/react-selectable-box/commit/49ba781847184470afbc47d159450219b431c83b))
+
 ## [1.9.2](https://github.com/linxianxi/react-selectable-box/compare/v1.9.1...v1.9.2) (2024-06-11)
 
 ### Bug Fixes
