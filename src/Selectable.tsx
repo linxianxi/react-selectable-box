@@ -198,8 +198,9 @@ function Selectable<T>(
           // https://github.com/linxianxi/react-selectable-box/issues/5
           if (shouldDraggingStart && (boxWidth > 1 || boxHeight > 1)) {
             setIsDragging(true);
-            scrollContainerOriginPosition = scrollContainer.style.position;
-            if (scrollContainer !== document.body && !scrollContainerOriginPosition) {
+            scrollContainerOriginPosition = getComputedStyle(scrollContainer).position;
+            // default position in browser is `static`
+            if (scrollContainer !== document.body && scrollContainerOriginPosition === 'static') {
               scrollContainer.style.position = 'relative';
             }
             handleStart(e);
