@@ -1,3 +1,9 @@
+## [1.9.4](https://github.com/linxianxi/react-selectable-box/compare/v1.9.3...v1.9.4) (2024-06-14)
+
+### Bug Fixes
+
+- onEnd should be correct when items exist ([#38](https://github.com/linxianxi/react-selectable-box/issues/38)) ([e3a1bdc](https://github.com/linxianxi/react-selectable-box/commit/e3a1bdc284895132acb2907da4fc6350e161a9a4))
+
 ## [1.9.3](https://github.com/linxianxi/react-selectable-box/compare/v1.9.2...v1.9.3) (2024-06-11)
 
 ### Bug Fixes
