@@ -110,7 +110,7 @@ function Selectable<T>(
     if (onEnd) {
       if (virtual) {
         unmountItemsInfo.current.forEach((info, item) => {
-          if (items.includes(item)) {
+          if (items.some((i) => compareFn(i, item))) {
             const inRange = isInRange(
               info.rule,
               {
@@ -212,10 +212,10 @@ function Selectable<T>(
     const scrollListenerElement = scrollContainer === document.body ? document : scrollContainer;
 
     const onScroll = (e: Event) => {
-      if (isDraggingRef.current && scrollContainer) {
-        const target = e.target as HTMLElement;
-        scrollInfo.current = { scrollTop: target.scrollTop, scrollLeft: target.scrollLeft };
+      const target = e.target as HTMLElement;
+      scrollInfo.current = { scrollTop: target.scrollTop, scrollLeft: target.scrollLeft };
 
+      if (isDraggingRef.current && scrollContainer) {
         const containerRect = scrollContainer.getBoundingClientRect();
         const x = Math.min(
           moveClient.current.x - containerRect.left + scrollContainer.scrollLeft,
@@ -237,7 +237,6 @@ function Selectable<T>(
       window.removeEventListener('mouseup', onMouseUp);
       window.removeEventListener('touchmove', onMouseMove);
       window.removeEventListener('touchend', onMouseUp);
-      scrollListenerElement.removeEventListener('scroll', onScroll);
 
       if (isDraggingRef.current) {
         scrollContainer.style.position = scrollContainerOriginPosition;
@@ -268,11 +267,11 @@ function Selectable<T>(
       window.addEventListener('mouseup', onMouseUp);
       window.addEventListener('touchmove', onMouseMove, { passive: false });
       window.addEventListener('touchend', onMouseUp);
-      scrollListenerElement.addEventListener('scroll', onScroll);
     };
 
     dragContainer.addEventListener('mousedown', onMouseDown);
     dragContainer.addEventListener('touchstart', onMouseDown);
+    scrollListenerElement.addEventListener('scroll', onScroll);
 
     return () => {
       if (scrollContainerOriginPosition) {

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Rule, useSelectableContext } from '../context';
 import { isInRange } from '../utils';
 import useUpdateEffect from './useUpdateEffect';
@@ -30,15 +30,14 @@ export default function useSelectable<T>({
     compareFn,
   } = useSelectableContext();
   const node = useRef<HTMLElement | null>(null);
-  const rectRef = useRef<DOMRect>();
 
   const [inRange, setInRange] = useState(false);
 
   useEffect(() => {
-    const nodeRect = node.current?.getBoundingClientRect();
-    rectRef.current = nodeRect;
-    setInRange(isInRange(rule, nodeRect, scrollContainer, boxPosition, boxRef));
-  }, [rectRef.current, rule, scrollContainer, boxPosition]);
+    setInRange(
+      isInRange(rule, node.current?.getBoundingClientRect(), scrollContainer, boxPosition, boxRef),
+    );
+  }, [rule, scrollContainer, boxPosition]);
 
   const isSelected = contextValue.some((i) => compareFn(i, value));
 
@@ -72,15 +71,15 @@ export default function useSelectable<T>({
   }, [isSelecting]);
 
   // collect item unmount information when virtual
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (virtual) {
       unmountItemsInfo.current.delete(value);
 
       return () => {
-        if (rectRef.current) {
+        if (node.current) {
           unmountItemsInfo.current.set(value, {
             rule,
-            rect: rectRef.current,
+            rect: node.current.getBoundingClientRect(),
             disabled,
             scrollLeft: scrollInfo.current.scrollLeft,
             scrollTop: scrollInfo.current.scrollTop,
