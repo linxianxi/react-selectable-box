@@ -26,6 +26,9 @@ devDependencies:
   '@semantic-release/git':
     specifier: ^10.0.1
     version: 10.0.1(semantic-release@21.0.7)
+  '@tanstack/react-virtual':
+    specifier: ^3.8.4
+    version: 3.8.4(react-dom@18.2.0)(react@18.2.0)
   '@testing-library/jest-dom':
     specifier: ^5
     version: 5.17.0
@@ -98,9 +101,6 @@ devDependencies:
   react-dom:
     specifier: ^18
     version: 18.2.0(react@18.2.0)
-  react-virtuoso:
-    specifier: ^4.5.0
-    version: 4.5.0(react-dom@18.2.0)(react@18.2.0)
   semantic-release:
     specifier: ^21
     version: 21.0.7
@@ -3716,6 +3716,21 @@ packages:
       '@swc/core-win32-arm64-msvc': 1.3.72
       '@swc/core-win32-ia32-msvc': 1.3.72
       '@swc/core-win32-x64-msvc': 1.3.72
+    dev: true
+
+  /@tanstack/react-virtual@3.8.4(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-Dq0VQr3QlTS2qL35g360QaJWBt7tCn/0xw4uZ0dHXPLO1Ak4Z4nVX4vuj1Npg1b/jqNMDToRtR5OIxM2NXRBWg==}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0
+      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
+    dependencies:
+      '@tanstack/virtual-core': 3.8.4
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+    dev: true
+
+  /@tanstack/virtual-core@3.8.4:
+    resolution: {integrity: sha512-iO5Ujgw3O1yIxWDe9FgUPNkGjyT657b1WNX52u+Wv1DyBFEpdCdGkuVaky0M3hHFqNWjAmHWTn4wgj9rTr7ZQg==}
     dev: true
 
   /@testing-library/dom@9.3.1:
@@ -13948,17 +13963,6 @@ packages:
       prismjs: 1.29.0
       react: 18.2.0
       refractor: 3.6.0
-    dev: true
-
-  /react-virtuoso@4.5.0(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-OMP6XrzJMMos1vbJZC16RxGW7utAxUMP7i5PNPi6epBNVH7nz+CF/DlmecNBep5wyjLud51dQ5epjb2A0w9W/Q==}
-    engines: {node: '>=10'}
-    peerDependencies:
-      react: '>=16 || >=17 || >= 18'
-      react-dom: '>=16 || >=17 || >= 18'
-    dependencies:
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
     dev: true
 
   /react@18.1.0:

@@ -6,6 +6,6 @@ group:
 order: 7
 ---
 
-### 配合 `react-virtuoso` 在虚拟列表中进行框选
+### 配合 `@tanstack/react-virtual` 在虚拟列表中进行框选
 
 <code src="../examples/virtual-list.tsx"></code>

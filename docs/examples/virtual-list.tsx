@@ -1,11 +1,13 @@
-import React, { HTMLAttributes, useState } from 'react';
+import { useVirtualizer } from '@tanstack/react-virtual';
+import React, { useState } from 'react';
 import Selectable, { useSelectable } from 'react-selectable-box';
-import { VirtuosoGrid } from 'react-virtuoso';
 
 const list: number[] = [];
-for (let i = 0; i < 2002; i++) {
+for (let i = 0; i < 2000; i++) {
   list.push(i);
 }
+
+const columnCount = 10;
 
 const Item = ({ value }: { value: number }) => {
   const { setNodeRef, isSelected, isAdding, isRemoving } = useSelectable({
@@ -32,16 +34,17 @@ const Item = ({ value }: { value: number }) => {
   );
 };
 
-const List: React.ForwardRefExoticComponent<
-  HTMLAttributes<HTMLDivElement> & React.RefAttributes<HTMLDivElement>
-> = React.forwardRef(({ style, ...props }, ref) => {
-  return (
-    <div ref={ref} {...props} style={{ ...style, display: 'flex', flexWrap: 'wrap', gap: 20 }} />
-  );
-});
-
 export default () => {
   const [value, setValue] = useState<number[]>([]);
+
+  const parentRef = React.useRef<HTMLDivElement>(null);
+
+  const rowVirtualizer = useVirtualizer({
+    count: Math.ceil(list.length / columnCount),
+    getScrollElement: () => parentRef.current,
+    estimateSize: () => 50,
+    gap: 20,
+  });
 
   return (
     <Selectable
@@ -53,15 +56,44 @@ export default () => {
         setValue(result);
       }}
     >
-      <VirtuosoGrid
-        totalCount={list.length}
-        style={{ height: 500 }}
-        components={{
-          List,
+      <div
+        ref={parentRef}
+        style={{
+          height: `400px`,
+          overflow: 'auto',
         }}
         className="container"
-        itemContent={(index) => <Item value={list[index]} />}
-      />
+      >
+        <div
+          style={{
+            height: `${rowVirtualizer.getTotalSize()}px`,
+            width: '100%',
+            position: 'relative',
+          }}
+        >
+          {rowVirtualizer.getVirtualItems().map((virtualItem) => (
+            <div
+              key={virtualItem.key}
+              style={{
+                display: 'flex',
+                gap: 20,
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: `${virtualItem.size}px`,
+                transform: `translateY(${virtualItem.start}px)`,
+              }}
+            >
+              {list
+                .slice(virtualItem.index * columnCount, (virtualItem.index + 1) * columnCount)
+                .map((item) => (
+                  <Item key={item} value={item} />
+                ))}
+            </div>
+          ))}
+        </div>
+      </div>
     </Selectable>
   );
 };
