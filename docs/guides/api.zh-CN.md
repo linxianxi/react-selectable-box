@@ -15,7 +15,7 @@ nav: 快速上手
 | value            | 受控已选择的值                                                                                     | any[]                                                             | -               |
 | disabled         | 是否禁用                                                                                           | boolean                                                           | false           |
 | mode             | 模式                                                                                               | `add` \| `remove` \| `reverse`                                    | `add`           |
-| items            | 全部 item 的集合值，只有虚拟列表时要传                                                             | any[]                                                             | -               |
+| items            | 全部 item 的集合值，只有虚拟列表时要传[（FAQ）](#faq)                                              | any[]                                                             | -               |
 | selectStartRange | 从哪里可以开始进行框选                                                                             | `all` \| `inside` \| `outside`                                    | `all`           |
 | scrollContainer  | 指定滚动的容器                                                                                     | () => HTMLElement                                                 |
 | dragContainer    | 指定可以开始拖拽的容器， 如果设置了 `scrollContainer` 请不要设置，因为在可滚动容器中这两个应该相等 | () => HTMLElement                                                 | scrollContainer |
@@ -55,3 +55,12 @@ const { setNodeRef, isSelected, isAdding, isRemoving, isSelecting, isDragging } 
 | 名称   | 说明     | 类型       |
 | ------ | -------- | ---------- |
 | cancel | 取消选择 | () => void |
+
+### FAQ
+
+#### 1.当配合虚拟列表使用时，传入 `items` 可以使在滚动过程中被卸载的 `item` 在框选结束后也会被选中。但与某些虚拟列表第三方库结合会有问题，配合较好的是 [@tanstack/react-virtual](https://github.com/TanStack/virtual)。如果你不介意这个问题（不传入 `items`），建议使用 [react-virtuoso](https://github.com/petyosi/react-virtuoso)，该库使用起来比较简单。
+
+不传入 `items`:
+![before](https://github.com/user-attachments/assets/4ec33cb8-adf5-44da-8573-9e69486c8cb2)
+传入 `items`:
+![after](https://github.com/user-attachments/assets/fd60faad-321d-46a4-8aec-c6bda2df2eb1)
