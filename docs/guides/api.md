@@ -15,7 +15,7 @@ nav: Get Started
 | value            | Current selected option                                                                                                                                     | any[]                                                             | -               |
 | disabled         | Whether to disable                                                                                                                                          | boolean                                                           | false           |
 | mode             | Selection mode                                                                                                                                              | `add` \| `remove` \| `reverse`                                    | `add`           |
-| items            | The collection value of all items, only the virtual list needs to be passed                                                                                 | any[]                                                             | -               |
+| items            | The collection value of all items, only the virtual list needs to be passed [（FAQ）](#faq)                                                                 | any[]                                                             | -               |
 | selectStartRange | Where to start with box selection                                                                                                                           | `all` \| `inside` \| `outside`                                    | `all`           |
 | scrollContainer  | Specify the scrolling container                                                                                                                             | () => HTMLElement                                                 |
 | dragContainer    | Specify the container that can start dragging. If `scrollContainer` is set, please do not set it because the two should be equal in a scrollable container. | () => HTMLElement                                                 | scrollContainer |
@@ -56,3 +56,12 @@ const { setNodeRef, isSelected, isAdding, isRemoving, isSelecting, isDragging } 
 | Name   | Description      | Type       |
 | ------ | ---------------- | ---------- |
 | cancel | cancel selection | () => void |
+
+### FAQ
+
+#### 1.When used with a virtual list, passing in items ensures that items that were unmounted during scrolling will still be selected after the selection ends. However, there can be issues when integrating with certain third-party virtual list libraries. A better integration can be achieved with [@tanstack/react-virtual](https://github.com/TanStack/virtual). If you don't mind not passing in items, it is recommended to use [react-virtuoso](https://github.com/petyosi/react-virtuoso), as it is simpler to use.
+
+not passing `items`:
+![before](https://github.com/user-attachments/assets/4ec33cb8-adf5-44da-8573-9e69486c8cb2)
+passing `items`:
+![after](https://github.com/user-attachments/assets/fd60faad-321d-46a4-8aec-c6bda2df2eb1)
