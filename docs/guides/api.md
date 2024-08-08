@@ -59,7 +59,7 @@ const { setNodeRef, isSelected, isAdding, isRemoving, isSelecting, isDragging } 
 
 ### FAQ
 
-#### 1.When used with a virtual list, passing in items ensures that items that were unmounted during scrolling will still be selected after the selection ends. However, there can be issues when integrating with certain third-party virtual list libraries. A better integration can be achieved with [@tanstack/react-virtual](https://github.com/TanStack/virtual). If you don't mind not passing in items, it is recommended to use [react-virtuoso](https://github.com/petyosi/react-virtuoso), as it is simpler to use.
+#### 1.When used with a virtual list, passing in `items` ensures that `block` were unmounted during scrolling will still be selected after the selection ends. However, there can be issues when integrating with certain third-party virtual list libraries. A better integration can be achieved with [@tanstack/react-virtual](https://github.com/TanStack/virtual). If you don't mind not passing in items, it is recommended to use [react-virtuoso](https://github.com/petyosi/react-virtuoso), as it is simpler to use.
 
 not passing `items`:
 ![before](https://github.com/user-attachments/assets/4ec33cb8-adf5-44da-8573-9e69486c8cb2)
