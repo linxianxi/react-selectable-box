@@ -118,29 +118,6 @@ const Item = ({ value }: { value: number }) => {
 };
 ```
 
-## Changelog
-
-[CHANGELOG](https://linxianxi.github.io/react-selectable-box/changelog)
-
-<div align="right">
-
-[![][back-to-top]](#readme-top)
-
-## </div>
-
-#### 📝 License
-
-Copyright © 2023 - present [linxianxi][profile-url]. <br />
-This project is [MIT](./LICENSE) licensed.
-
-<!-- LINK GROUP -->
-
-[profile-url]: https://github.com/linxianxi
-
-<!-- SHIELD LINK GROUP -->
-
-[back-to-top]: https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square
-
 <!-- contributors -->
 
 [contributors-shield]: https://img.shields.io/github/contributors/linxianxi/react-selectable-box.svg?style=flat
@@ -160,3 +137,7 @@ This project is [MIT](./LICENSE) licensed.
 
 [issues-shield]: https://img.shields.io/github/issues/linxianxi/react-selectable-box.svg?style=flat
 [issues-url]: https://github.com/linxianxi/react-selectable-box/issues/new/choose
+
+## Buy me a coffee
+
+<img width="300" src="https://github.com/user-attachments/assets/7f2db8fd-8388-4421-8d6b-200fd9a5947e" />
