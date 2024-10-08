@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Rule, useSelectableContext } from '../context';
-import { isInRange } from '../utils';
+import { checkInRange } from '../utils';
 import useUpdateEffect from './useUpdateEffect';
 
 interface UseSelectableProps<T> {
@@ -24,24 +24,29 @@ export default function useSelectable<T>({
     startTarget,
     selectingValue,
     unmountItemsInfo,
-    scrollInfo,
     virtual,
     boxRef,
     compareFn,
   } = useSelectableContext();
   const node = useRef<HTMLElement | null>(null);
 
-  const [inRange, setInRange] = useState(false);
+  const [isInRange, setIsInRange] = useState(false);
 
   useEffect(() => {
-    setInRange(
-      isInRange(rule, node.current?.getBoundingClientRect(), scrollContainer, boxPosition, boxRef),
+    setIsInRange(
+      checkInRange(
+        rule,
+        node.current?.getBoundingClientRect(),
+        scrollContainer,
+        boxPosition,
+        boxRef,
+      ),
     );
   }, [rule, scrollContainer, boxPosition]);
 
   const isSelected = contextValue.some((i) => compareFn(i, value));
 
-  const isSelecting = isDragging && !disabled && inRange;
+  const isSelecting = isDragging && !disabled && isInRange;
 
   const isRemoving = isSelecting && isSelected && (mode === 'remove' || mode === 'reverse');
 
@@ -76,13 +81,13 @@ export default function useSelectable<T>({
       unmountItemsInfo.current.delete(value);
 
       return () => {
-        if (node.current) {
+        if (node.current && scrollContainer) {
           unmountItemsInfo.current.set(value, {
             rule,
             rect: node.current.getBoundingClientRect(),
             disabled,
-            scrollLeft: scrollInfo.current.scrollLeft,
-            scrollTop: scrollInfo.current.scrollTop,
+            scrollLeft: scrollContainer.scrollLeft,
+            scrollTop: scrollContainer.scrollTop,
           });
         }
       };

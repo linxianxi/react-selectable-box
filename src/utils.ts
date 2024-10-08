@@ -8,7 +8,7 @@ export const getClientXY = (e: MouseEvent | TouchEvent) => {
   };
 };
 
-export const isInRange = (
+export const checkInRange = (
   rule: Rule,
   rect: { left: number; top: number; width: number; height: number } | undefined,
   scrollContainer: HTMLElement | null,

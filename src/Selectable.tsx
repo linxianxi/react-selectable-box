@@ -6,7 +6,7 @@ import useEvent from './hooks/useEvent';
 import useLatest from './hooks/useLatest';
 import useMergedState from './hooks/useMergedState';
 import useScroll from './hooks/useScroll';
-import { getClientXY, isInRange } from './utils';
+import { checkInRange, getClientXY } from './utils';
 
 export interface SelectableProps<T> {
   defaultValue?: T[];
@@ -111,7 +111,7 @@ function Selectable<T>(
       if (virtual) {
         unmountItemsInfo.current.forEach((info, item) => {
           if (items.some((i) => compareFn(i, item))) {
-            const inRange = isInRange(
+            const isInRange = checkInRange(
               info.rule,
               {
                 width: info.rect.width,
@@ -123,7 +123,7 @@ function Selectable<T>(
               boxPosition,
               boxRef,
             );
-            if (inRange && !info.disabled) {
+            if (isInRange && !info.disabled) {
               selectingValue.current.push(item);
             } else {
               selectingValue.current = selectingValue.current.filter((i) => !compareFn(i, item));
@@ -299,7 +299,6 @@ function Selectable<T>(
       startTarget,
       startInside,
       unmountItemsInfo,
-      scrollInfo,
       virtual,
       boxRef,
       compareFn,
@@ -312,7 +311,6 @@ function Selectable<T>(
       scrollContainer,
       startTarget,
       unmountItemsInfo,
-      scrollInfo,
       virtual,
       boxRef,
       compareFn,

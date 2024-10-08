@@ -29,10 +29,6 @@ interface ISelectableContext<T> {
   startTarget: HTMLElement | null;
   startInside: React.MutableRefObject<boolean>;
   unmountItemsInfo: React.MutableRefObject<UnmountItemsInfoType<T>>;
-  scrollInfo: React.MutableRefObject<{
-    scrollTop: number;
-    scrollLeft: number;
-  }>;
   virtual: boolean;
   boxRef: React.MutableRefObject<HTMLDivElement | null>;
   compareFn: (a: T, b: T) => boolean;
