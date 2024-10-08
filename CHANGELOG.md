@@ -1,3 +1,9 @@
+## [1.9.5](https://github.com/linxianxi/react-selectable-box/compare/v1.9.4...v1.9.5) (2024-10-08)
+
+### Bug Fixes
+
+- fixed the mouse scrolling virtual list issue ([#42](https://github.com/linxianxi/react-selectable-box/issues/42)) ([386c074](https://github.com/linxianxi/react-selectable-box/commit/386c0745e2fc0fdadb134b8bc0a7c37b3a4ee1c0))
+
 ## [1.9.4](https://github.com/linxianxi/react-selectable-box/compare/v1.9.3...v1.9.4) (2024-06-14)
 
 ### Bug Fixes
