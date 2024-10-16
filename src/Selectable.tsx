@@ -248,6 +248,10 @@ function Selectable<T>(
     };
 
     const onMouseDown = (e: MouseEvent | TouchEvent) => {
+      if (e instanceof MouseEvent && e.button !== 0) {
+        return;
+      }
+
       // disable text selection, but it will prevent default scroll behavior when mouse move, so we used `useScroll`
       e.preventDefault();
       isMouseDowning = true;
