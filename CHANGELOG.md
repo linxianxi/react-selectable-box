@@ -1,3 +1,9 @@
+## [1.9.7](https://github.com/linxianxi/react-selectable-box/compare/v1.9.6...v1.9.7) (2024-10-17)
+
+### Bug Fixes
+
+- click event should be worked on mobile ([#45](https://github.com/linxianxi/react-selectable-box/issues/45)) ([58cdd7e](https://github.com/linxianxi/react-selectable-box/commit/58cdd7e4ac11756c36b0d022221a46f79cf9366d))
+
 ## [1.9.6](https://github.com/linxianxi/react-selectable-box/compare/v1.9.5...v1.9.6) (2024-10-17)
 
 ### Bug Fixes
