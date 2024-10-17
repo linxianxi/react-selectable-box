@@ -1,3 +1,9 @@
+## [1.9.6](https://github.com/linxianxi/react-selectable-box/compare/v1.9.5...v1.9.6) (2024-10-17)
+
+### Bug Fixes
+
+- **selectable:** prevent right-click from triggering selection ([#43](https://github.com/linxianxi/react-selectable-box/issues/43)) ([d74ef62](https://github.com/linxianxi/react-selectable-box/commit/d74ef62e5281476ce55d12e38f7ba1322d61655f))
+
 ## [1.9.5](https://github.com/linxianxi/react-selectable-box/compare/v1.9.4...v1.9.5) (2024-10-08)
 
 ### Bug Fixes
