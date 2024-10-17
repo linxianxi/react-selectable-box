@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { getClientXY } from '../utils';
 
 const SCROLL_STEP = 4;
@@ -11,40 +11,23 @@ export default function useScroll() {
   const leftRaf = useRef<number | null>(null);
   const rightRaf = useRef<number | null>(null);
 
-  const cancelTopRaf = () => {
-    if (topRaf.current) {
-      cancelAnimationFrame(topRaf.current);
-      topRaf.current = null;
-    }
-  };
-
-  const cancelBottomRaf = () => {
-    if (bottomRaf.current) {
-      cancelAnimationFrame(bottomRaf.current);
-      bottomRaf.current = null;
-    }
-  };
-
-  const cancelLeftRaf = () => {
-    if (leftRaf.current) {
-      cancelAnimationFrame(leftRaf.current);
-      leftRaf.current = null;
-    }
-  };
-
-  const cancelRightRaf = () => {
-    if (rightRaf.current) {
-      cancelAnimationFrame(rightRaf.current);
-      rightRaf.current = null;
+  const cancelRaf = (raf: React.MutableRefObject<number | null>) => {
+    if (raf.current) {
+      cancelAnimationFrame(raf.current);
+      raf.current = null;
     }
   };
 
   const cancelScroll = () => {
-    cancelTopRaf();
-    cancelBottomRaf();
-    cancelLeftRaf();
-    cancelRightRaf();
+    cancelRaf(topRaf);
+    cancelRaf(bottomRaf);
+    cancelRaf(leftRaf);
+    cancelRaf(rightRaf);
   };
+
+  useEffect(() => {
+    return cancelScroll;
+  }, []);
 
   const smoothScroll = (e: MouseEvent | TouchEvent, _container: HTMLElement) => {
     const container = _container === document.body ? document.documentElement : _container;
@@ -64,7 +47,7 @@ export default function useScroll() {
         callback();
       }
     } else {
-      cancelTopRaf();
+      cancelRaf(topRaf);
     }
 
     // bottom
@@ -84,7 +67,7 @@ export default function useScroll() {
         callback();
       }
     } else {
-      cancelBottomRaf();
+      cancelRaf(bottomRaf);
     }
 
     // left
@@ -101,7 +84,7 @@ export default function useScroll() {
         callback();
       }
     } else {
-      cancelLeftRaf();
+      cancelRaf(leftRaf);
     }
 
     // right
@@ -121,7 +104,7 @@ export default function useScroll() {
         callback();
       }
     } else {
-      cancelRightRaf();
+      cancelRaf(rightRaf);
     }
   };
 
