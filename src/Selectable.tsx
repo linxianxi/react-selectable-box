@@ -171,6 +171,10 @@ function Selectable<T>(
 
     const onMouseMove = (e: MouseEvent | TouchEvent) => {
       if (isMouseDowning) {
+        // Prevent scroll on mobile
+        if (e instanceof TouchEvent) {
+          e.preventDefault();
+        }
         const { clientX, clientY } = getClientXY(e);
         moveClient.current = { x: clientX, y: clientY };
         const { left, top } = scrollContainer.getBoundingClientRect();
@@ -248,12 +252,17 @@ function Selectable<T>(
     };
 
     const onMouseDown = (e: MouseEvent | TouchEvent) => {
-      if (e instanceof MouseEvent && e.button !== 0) {
+      const isMouseEvent = e instanceof MouseEvent;
+      if (isMouseEvent && e.button !== 0) {
         return;
       }
 
-      // disable text selection, but it will prevent default scroll behavior when mouse move, so we used `useScroll`
-      e.preventDefault();
+      // Disable text selection, but it will prevent default scroll behavior when mouse move, so we used `useScroll`
+      // And it will prevent click events on mobile devices, so don't trigger it
+      if (isMouseEvent) {
+        e.preventDefault();
+      }
+
       isMouseDowning = true;
 
       if (selectStartRangeRef.current !== 'all') {
