@@ -172,7 +172,7 @@ function Selectable<T>(
     const onMouseMove = (e: MouseEvent | TouchEvent) => {
       if (isMouseDowning) {
         // Prevent scroll on mobile
-        if (e instanceof TouchEvent) {
+        if (window.TouchEvent && e instanceof TouchEvent) {
           e.preventDefault();
         }
         const { clientX, clientY } = getClientXY(e);
