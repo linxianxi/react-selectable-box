@@ -1,3 +1,9 @@
+## [1.9.8](https://github.com/linxianxi/react-selectable-box/compare/v1.9.7...v1.9.8) (2024-10-18)
+
+### Bug Fixes
+
+- fixed TouchEvent error on Firefox ([#46](https://github.com/linxianxi/react-selectable-box/issues/46)) ([8a5e7bc](https://github.com/linxianxi/react-selectable-box/commit/8a5e7bc5c3b5d93dab81fc2fe942ddb5c81cb3bc))
+
 ## [1.9.7](https://github.com/linxianxi/react-selectable-box/compare/v1.9.6...v1.9.7) (2024-10-17)
 
 ### Bug Fixes
