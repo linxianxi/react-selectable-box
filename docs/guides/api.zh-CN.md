@@ -17,6 +17,7 @@ nav: 快速上手
 | mode             | 模式                                                                                               | `add` \| `remove` \| `reverse`                                    | `add`           |
 | items            | 全部 item 的集合值，只有虚拟列表时要传[（FAQ）](#faq)                                              | any[]                                                             | -               |
 | selectStartRange | 从哪里可以开始进行框选                                                                             | `all` \| `inside` \| `outside`                                    | `all`           |
+| scrollSpeed      | 滚动速度                                                                                           | number                                                            | 4               |
 | scrollContainer  | 指定滚动的容器                                                                                     | () => HTMLElement                                                 |
 | dragContainer    | 指定可以开始拖拽的容器， 如果设置了 `scrollContainer` 请不要设置，因为在可滚动容器中这两个应该相等 | () => HTMLElement                                                 | scrollContainer |
 | boxStyle         | 框选框的样式                                                                                       | React.CSSProperties                                               | -               |

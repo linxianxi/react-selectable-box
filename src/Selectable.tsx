@@ -17,6 +17,7 @@ export interface SelectableProps<T> {
   children?: React.ReactNode;
   mode?: 'add' | 'remove' | 'reverse';
   selectStartRange?: 'all' | 'inside' | 'outside';
+  scrollSpeed?: number;
   scrollContainer?: () => HTMLElement;
   dragContainer?: () => HTMLElement;
   boxStyle?: React.CSSProperties;
@@ -47,6 +48,7 @@ function Selectable<T>(
     mode = 'add',
     children,
     selectStartRange = 'all',
+    scrollSpeed,
     getContainer,
     scrollContainer: propsScrollContainer,
     dragContainer: propsDragContainer,
@@ -76,7 +78,7 @@ function Selectable<T>(
   const scrollContainer = useContainer(propsScrollContainer || getContainer);
   const dragContainer = useContainer(propsDragContainer || propsScrollContainer || getContainer);
 
-  const { smoothScroll, cancelScroll } = useScroll();
+  const { smoothScroll, cancelScroll } = useScroll(scrollSpeed);
   const startCoordsRef = useLatest(startCoords);
   const isDraggingRef = useLatest(isDragging);
   const selectStartRangeRef = useLatest(selectStartRange);
