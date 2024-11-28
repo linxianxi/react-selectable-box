@@ -1,3 +1,9 @@
+# [1.10.0](https://github.com/linxianxi/react-selectable-box/compare/v1.9.8...v1.10.0) (2024-11-28)
+
+### Features
+
+- support scroll speed ([#50](https://github.com/linxianxi/react-selectable-box/issues/50)) ([42b0122](https://github.com/linxianxi/react-selectable-box/commit/42b012286e5328947177064cf19c988d6fea6e4a))
+
 ## [1.9.8](https://github.com/linxianxi/react-selectable-box/compare/v1.9.7...v1.9.8) (2024-10-18)
 
 ### Bug Fixes
