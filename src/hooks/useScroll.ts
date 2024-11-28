@@ -1,11 +1,11 @@
 import { useEffect, useRef } from 'react';
 import { getClientXY } from '../utils';
 
-const SCROLL_STEP = 4;
+const DEFAULT_SCROLL_SPEED = 4;
 
 const EDGE_OFFSET = 1;
 
-export default function useScroll() {
+export default function useScroll(scrollSpeed = DEFAULT_SCROLL_SPEED) {
   const topRaf = useRef<number | null>(null);
   const bottomRaf = useRef<number | null>(null);
   const leftRaf = useRef<number | null>(null);
@@ -39,7 +39,7 @@ export default function useScroll() {
         const callback = () => {
           if (container.scrollTop > 0) {
             topRaf.current = requestAnimationFrame(() => {
-              container.scrollTop -= SCROLL_STEP;
+              container.scrollTop -= scrollSpeed;
               callback();
             });
           }
@@ -59,7 +59,7 @@ export default function useScroll() {
         const callback = () => {
           if (container.scrollTop < container.scrollHeight - container.clientHeight) {
             bottomRaf.current = requestAnimationFrame(() => {
-              container.scrollTop += SCROLL_STEP;
+              container.scrollTop += scrollSpeed;
               callback();
             });
           }
@@ -76,7 +76,7 @@ export default function useScroll() {
         const callback = () => {
           if (container.scrollLeft > 0) {
             leftRaf.current = requestAnimationFrame(() => {
-              container.scrollLeft -= SCROLL_STEP;
+              container.scrollLeft -= scrollSpeed;
               callback();
             });
           }
@@ -96,7 +96,7 @@ export default function useScroll() {
         const callback = () => {
           if (container.scrollLeft < container.scrollWidth - container.clientWidth) {
             rightRaf.current = requestAnimationFrame(() => {
-              container.scrollLeft += SCROLL_STEP;
+              container.scrollLeft += scrollSpeed;
               callback();
             });
           }
