@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { Rule, useSelectableContext } from '../context';
+import { useSelectableContext } from '../context';
+import { Rule } from '../type';
 import { checkInRange } from '../utils';
 import useUpdateEffect from './useUpdateEffect';
 
@@ -16,7 +17,7 @@ export default function useSelectable<T>({
 }: UseSelectableProps<T>) {
   const {
     mode,
-    scrollContainer,
+    innerScrollContainer,
     boxPosition,
     isDragging,
     value: contextValue = [],
@@ -37,12 +38,12 @@ export default function useSelectable<T>({
       checkInRange(
         rule,
         node.current?.getBoundingClientRect(),
-        scrollContainer,
+        innerScrollContainer,
         boxPosition,
         boxRef,
       ),
     );
-  }, [rule, scrollContainer, boxPosition]);
+  }, [rule, innerScrollContainer, boxPosition]);
 
   const isSelected = contextValue.some((i) => compareFn(i, value));
 
@@ -81,13 +82,13 @@ export default function useSelectable<T>({
       unmountItemsInfo.current.delete(value);
 
       return () => {
-        if (node.current && scrollContainer) {
+        if (node.current && innerScrollContainer) {
           unmountItemsInfo.current.set(value, {
             rule,
             rect: node.current.getBoundingClientRect(),
             disabled,
-            scrollLeft: scrollContainer.scrollLeft,
-            scrollTop: scrollContainer.scrollTop,
+            scrollLeft: innerScrollContainer.scrollLeft,
+            scrollTop: innerScrollContainer.scrollTop,
           });
         }
       };

@@ -1,11 +1,15 @@
 import { useEffect, useRef } from 'react';
+import { SelectableProps } from '../type';
 import { getClientXY } from '../utils';
 
 const DEFAULT_SCROLL_SPEED = 4;
 
 const EDGE_OFFSET = 1;
 
-export default function useScroll(scrollSpeed = DEFAULT_SCROLL_SPEED) {
+export default function useScroll(
+  scrollSpeed = DEFAULT_SCROLL_SPEED,
+  scrollContainer: SelectableProps['scrollContainer'],
+) {
   const topRaf = useRef<number | null>(null);
   const bottomRaf = useRef<number | null>(null);
   const leftRaf = useRef<number | null>(null);
@@ -29,17 +33,39 @@ export default function useScroll(scrollSpeed = DEFAULT_SCROLL_SPEED) {
     return cancelScroll;
   }, []);
 
-  const smoothScroll = (e: MouseEvent | TouchEvent, _container: HTMLElement) => {
-    const container = _container === document.body ? document.documentElement : _container;
+  const getScrollContainer = (axis: 'x' | 'y') => {
+    function getContainer() {
+      if (scrollContainer) {
+        if (typeof scrollContainer === 'function') {
+          return scrollContainer();
+        }
+        if (scrollContainer.innerContainer?.axis === axis) {
+          return scrollContainer.innerContainer.getContainer();
+        }
+        if (scrollContainer.outerContainer?.axis === axis) {
+          return scrollContainer.outerContainer.getContainer();
+        }
+      }
+      return document.body;
+    }
+
+    const container = getContainer();
+
+    return container === document.body ? document.documentElement : container;
+  };
+
+  const smoothScroll = (e: MouseEvent | TouchEvent) => {
     const { clientX, clientY } = getClientXY(e);
+    const xScrollContainer = getScrollContainer('x');
+    const yScrollContainer = getScrollContainer('y');
 
     // top
-    if (clientY - EDGE_OFFSET <= 0 || clientY <= container.getBoundingClientRect().top) {
+    if (clientY - EDGE_OFFSET <= 0 || clientY <= yScrollContainer.getBoundingClientRect().top) {
       if (!topRaf.current) {
         const callback = () => {
-          if (container.scrollTop > 0) {
+          if (yScrollContainer.scrollTop > 0) {
             topRaf.current = requestAnimationFrame(() => {
-              container.scrollTop -= scrollSpeed;
+              yScrollContainer.scrollTop -= scrollSpeed;
               callback();
             });
           }
@@ -53,13 +79,16 @@ export default function useScroll(scrollSpeed = DEFAULT_SCROLL_SPEED) {
     // bottom
     if (
       clientY + EDGE_OFFSET >= window.innerHeight ||
-      clientY >= container.getBoundingClientRect().bottom
+      clientY >= yScrollContainer.getBoundingClientRect().bottom
     ) {
       if (!bottomRaf.current) {
         const callback = () => {
-          if (container.scrollTop < container.scrollHeight - container.clientHeight) {
+          if (
+            yScrollContainer.scrollTop <
+            yScrollContainer.scrollHeight - yScrollContainer.clientHeight
+          ) {
             bottomRaf.current = requestAnimationFrame(() => {
-              container.scrollTop += scrollSpeed;
+              yScrollContainer.scrollTop += scrollSpeed;
               callback();
             });
           }
@@ -71,12 +100,12 @@ export default function useScroll(scrollSpeed = DEFAULT_SCROLL_SPEED) {
     }
 
     // left
-    if (clientX - EDGE_OFFSET <= 0 || clientX <= container.getBoundingClientRect().left) {
+    if (clientX - EDGE_OFFSET <= 0 || clientX <= xScrollContainer.getBoundingClientRect().left) {
       if (!leftRaf.current) {
         const callback = () => {
-          if (container.scrollLeft > 0) {
+          if (xScrollContainer.scrollLeft > 0) {
             leftRaf.current = requestAnimationFrame(() => {
-              container.scrollLeft -= scrollSpeed;
+              xScrollContainer.scrollLeft -= scrollSpeed;
               callback();
             });
           }
@@ -90,13 +119,16 @@ export default function useScroll(scrollSpeed = DEFAULT_SCROLL_SPEED) {
     // right
     if (
       clientX + EDGE_OFFSET >= window.innerWidth ||
-      clientX >= container.getBoundingClientRect().right
+      clientX >= xScrollContainer.getBoundingClientRect().right
     ) {
       if (!rightRaf.current) {
         const callback = () => {
-          if (container.scrollLeft < container.scrollWidth - container.clientWidth) {
+          if (
+            xScrollContainer.scrollLeft <
+            xScrollContainer.scrollWidth - xScrollContainer.clientWidth
+          ) {
             rightRaf.current = requestAnimationFrame(() => {
-              container.scrollLeft += scrollSpeed;
+              xScrollContainer.scrollLeft += scrollSpeed;
               callback();
             });
           }

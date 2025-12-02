@@ -2,18 +2,25 @@ import { useEffect, useState } from 'react';
 
 const defaultGetContainer = () => document.body;
 
-export const getPortalContainer = (getContainer: () => HTMLElement = defaultGetContainer) => {
-  if (typeof window !== 'undefined') {
+export const getPortalContainer = (
+  getContainer?: () => HTMLElement,
+  useDefault: boolean = true,
+) => {
+  if (getContainer) {
     return getContainer();
   }
+  if (useDefault) {
+    return defaultGetContainer();
+  }
+
   return null;
 };
 
-export default function useContainer(getContainer?: () => HTMLElement) {
-  const [container, setContainer] = useState(() => getPortalContainer(getContainer));
+export default function useContainer(getContainer?: () => HTMLElement, useDefault?: boolean) {
+  const [container, setContainer] = useState(() => getPortalContainer(getContainer, useDefault));
 
   useEffect(() => {
-    setContainer(getPortalContainer(getContainer));
+    setContainer(getPortalContainer(getContainer, useDefault));
   });
 
   return container;

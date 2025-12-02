@@ -49,7 +49,7 @@ export default () => {
   return (
     <Selectable
       value={value}
-      items={list}
+      virtualItems={list}
       scrollContainer={() => document.querySelector('.container') as HTMLElement}
       onEnd={(selectingValue, { added, removed }) => {
         const result = value.concat(added).filter((i) => !removed.includes(i));
