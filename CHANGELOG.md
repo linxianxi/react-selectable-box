@@ -1,3 +1,13 @@
+# [2.0.0-beta.1](https://github.com/linxianxi/react-selectable-box/compare/v1.10.0...v2.0.0-beta.1) (2025-12-02)
+
+### Features
+
+- v2 ([b973ac8](https://github.com/linxianxi/react-selectable-box/commit/b973ac89b178e5960ab59f4969962d9fae51f909))
+
+### BREAKING CHANGES
+
+- remove defaultValue and getContainer, rename items
+
 # [1.10.0](https://github.com/linxianxi/react-selectable-box/compare/v1.9.8...v1.10.0) (2024-11-28)
 
 ### Features
