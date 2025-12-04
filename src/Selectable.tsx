@@ -1,39 +1,12 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { SelectableContext, UnmountItemsInfoType } from './context';
+import { SelectableContext } from './context';
 import useContainer from './hooks/useContainer';
 import useEvent from './hooks/useEvent';
 import useLatest from './hooks/useLatest';
-import useMergedState from './hooks/useMergedState';
 import useScroll from './hooks/useScroll';
+import { SelectableProps, SelectableRef, UnmountItemsInfoType } from './type';
 import { checkInRange, getClientXY } from './utils';
-
-export interface SelectableProps<T> {
-  defaultValue?: T[];
-  value?: T[];
-  /** support virtual */
-  items?: T[];
-  disabled?: boolean;
-  children?: React.ReactNode;
-  mode?: 'add' | 'remove' | 'reverse';
-  selectStartRange?: 'all' | 'inside' | 'outside';
-  scrollSpeed?: number;
-  scrollContainer?: () => HTMLElement;
-  dragContainer?: () => HTMLElement;
-  boxStyle?: React.CSSProperties;
-  boxClassName?: string;
-  compareFn?: (a: T, b: T) => boolean;
-  onStart?: (event: MouseEvent | TouchEvent) => void;
-  onEnd?: (selectingValue: T[], changed: { added: T[]; removed: T[] }) => void;
-  /**
-   * @deprecated Use scrollContainer instead
-   */
-  getContainer?: () => HTMLElement;
-}
-
-export interface SelectableRef {
-  cancel: () => void;
-}
 
 function defaultCompareFn<T>(a: T, b: T) {
   return a === b;
@@ -41,15 +14,13 @@ function defaultCompareFn<T>(a: T, b: T) {
 
 function Selectable<T>(
   {
-    defaultValue,
-    value: propsValue,
-    items,
+    value,
+    virtualItems,
     disabled,
     mode = 'add',
     children,
     selectStartRange = 'all',
     scrollSpeed,
-    getContainer,
     scrollContainer: propsScrollContainer,
     dragContainer: propsDragContainer,
     boxStyle,
@@ -67,18 +38,26 @@ function Selectable<T>(
   const [startTarget, setStartTarget] = useState<HTMLElement | null>(null);
   const startInside = useRef(false);
   const moveClient = useRef({ x: 0, y: 0 });
-  const [value, setValue] = useMergedState(defaultValue || [], {
-    value: propsValue,
-  });
   const boxRef = useRef<HTMLDivElement | null>(null);
   const unmountItemsInfo = useRef<UnmountItemsInfoType<T>>(new Map());
   const scrollInfo = useRef({ scrollTop: 0, scrollLeft: 0 });
   const [isCanceled, setIsCanceled] = useState(false);
 
-  const scrollContainer = useContainer(propsScrollContainer || getContainer);
-  const dragContainer = useContainer(propsDragContainer || propsScrollContainer || getContainer);
+  const getInnerScrollContainer =
+    typeof propsScrollContainer === 'function'
+      ? propsScrollContainer
+      : propsScrollContainer?.inner?.getContainer;
 
-  const { smoothScroll, cancelScroll } = useScroll(scrollSpeed);
+  const innerScrollContainer = useContainer(getInnerScrollContainer);
+  const outerScrollContainer = useContainer(
+    typeof propsScrollContainer === 'object'
+      ? propsScrollContainer?.outer?.getContainer
+      : undefined,
+    false,
+  );
+  const dragContainer = useContainer(propsDragContainer || getInnerScrollContainer);
+
+  const { smoothScroll, cancelScroll } = useScroll(scrollSpeed, propsScrollContainer);
   const startCoordsRef = useLatest(startCoords);
   const isDraggingRef = useLatest(isDragging);
   const selectStartRangeRef = useLatest(selectStartRange);
@@ -89,13 +68,7 @@ function Selectable<T>(
   const height = isDragging ? Math.abs(startCoords.y - Math.max(0, moveCoords.y)) : 0;
   const boxPosition = useMemo(() => ({ top, left, width, height }), [top, left, width, height]);
 
-  const virtual = !!items;
-
-  if (process.env.NODE_ENV === 'development' && getContainer) {
-    console.error(
-      '[react-selectable-box]: getContainer will be deprecated in the future, use scrollContainer instead',
-    );
-  }
+  const virtual = !!virtualItems;
 
   React.useImperativeHandle(ref, () => ({
     cancel: () => {
@@ -112,7 +85,7 @@ function Selectable<T>(
     if (onEnd) {
       if (virtual) {
         unmountItemsInfo.current.forEach((info, item) => {
-          if (items.some((i) => compareFn(i, item))) {
+          if (virtualItems.some((i) => compareFn(i, item))) {
             const isInRange = checkInRange(
               info.rule,
               {
@@ -121,7 +94,7 @@ function Selectable<T>(
                 top: info.rect.top + info.scrollTop - scrollInfo.current.scrollTop,
                 left: info.rect.left + info.scrollLeft - scrollInfo.current.scrollLeft,
               },
-              scrollContainer,
+              innerScrollContainer,
               boxPosition,
               boxRef,
             );
@@ -166,7 +139,7 @@ function Selectable<T>(
       selectingValue.current = [];
     };
 
-    if (disabled || !scrollContainer || !dragContainer || isCanceled) {
+    if (disabled || !innerScrollContainer || !dragContainer || isCanceled) {
       reset();
       return;
     }
@@ -179,17 +152,20 @@ function Selectable<T>(
         }
         const { clientX, clientY } = getClientXY(e);
         moveClient.current = { x: clientX, y: clientY };
-        const { left, top } = scrollContainer.getBoundingClientRect();
+        const { left, top } = innerScrollContainer.getBoundingClientRect();
         const x = Math.min(
-          clientX - left + scrollContainer.scrollLeft,
-          scrollContainer.scrollWidth,
+          clientX - left + innerScrollContainer.scrollLeft,
+          innerScrollContainer.scrollWidth,
         );
-        const y = Math.min(clientY - top + scrollContainer.scrollTop, scrollContainer.scrollHeight);
+        const y = Math.min(
+          clientY - top + innerScrollContainer.scrollTop,
+          innerScrollContainer.scrollHeight,
+        );
         setMoveCoords({
           x,
           y,
         });
-        smoothScroll(e, scrollContainer);
+        smoothScroll(e);
 
         if (!isDraggingRef.current) {
           let shouldDraggingStart = true;
@@ -204,10 +180,13 @@ function Selectable<T>(
           // https://github.com/linxianxi/react-selectable-box/issues/5
           if (shouldDraggingStart && (boxWidth > 1 || boxHeight > 1)) {
             setIsDragging(true);
-            scrollContainerOriginPosition = getComputedStyle(scrollContainer).position;
+            scrollContainerOriginPosition = getComputedStyle(innerScrollContainer).position;
             // default position in browser is `static`
-            if (scrollContainer !== document.body && scrollContainerOriginPosition === 'static') {
-              scrollContainer.style.position = 'relative';
+            if (
+              innerScrollContainer !== document.body &&
+              scrollContainerOriginPosition === 'static'
+            ) {
+              innerScrollContainer.style.position = 'relative';
             }
             handleStart(e);
           }
@@ -215,27 +194,34 @@ function Selectable<T>(
       }
     };
 
-    const scrollListenerElement = scrollContainer === document.body ? document : scrollContainer;
+    const innerScrollListenerElement =
+      innerScrollContainer === document.body ? document : innerScrollContainer;
+    const outerScrollListenerElement =
+      outerScrollContainer === document.body ? document : outerScrollContainer;
 
     const onScroll = (e: Event) => {
       const target = e.target as HTMLElement;
       scrollInfo.current = { scrollTop: target.scrollTop, scrollLeft: target.scrollLeft };
 
-      if (isDraggingRef.current && scrollContainer) {
-        const containerRect = scrollContainer.getBoundingClientRect();
+      if (isDraggingRef.current) {
+        const containerRect = innerScrollContainer.getBoundingClientRect();
         const x = Math.min(
-          moveClient.current.x - containerRect.left + scrollContainer.scrollLeft,
-          scrollContainer.scrollWidth,
+          moveClient.current.x - containerRect.left + innerScrollContainer.scrollLeft,
+          innerScrollContainer.scrollWidth,
         );
         const y = Math.min(
-          moveClient.current.y - containerRect.top + scrollContainer.scrollTop,
-          scrollContainer.scrollHeight,
+          moveClient.current.y - containerRect.top + innerScrollContainer.scrollTop,
+          innerScrollContainer.scrollHeight,
         );
         setMoveCoords({
           x,
           y,
         });
       }
+    };
+
+    const onOuterScroll = () => {
+      onScroll({ target: innerScrollContainer } as unknown as Event);
     };
 
     const onMouseUp = () => {
@@ -245,9 +231,8 @@ function Selectable<T>(
       window.removeEventListener('touchend', onMouseUp);
 
       if (isDraggingRef.current) {
-        scrollContainer.style.position = scrollContainerOriginPosition;
+        innerScrollContainer.style.position = scrollContainerOriginPosition;
         cancelScroll();
-        setValue(selectingValue.current);
         handleEnd();
       }
       reset();
@@ -272,10 +257,10 @@ function Selectable<T>(
       }
 
       const { clientX, clientY } = getClientXY(e);
-      const { left, top } = scrollContainer.getBoundingClientRect();
+      const { left, top } = innerScrollContainer.getBoundingClientRect();
       setStartCoords({
-        x: clientX - left + scrollContainer.scrollLeft,
-        y: clientY - top + scrollContainer.scrollTop,
+        x: clientX - left + innerScrollContainer.scrollLeft,
+        y: clientY - top + innerScrollContainer.scrollTop,
       });
 
       window.addEventListener('mousemove', onMouseMove, { passive: false });
@@ -286,22 +271,24 @@ function Selectable<T>(
 
     dragContainer.addEventListener('mousedown', onMouseDown);
     dragContainer.addEventListener('touchstart', onMouseDown);
-    scrollListenerElement.addEventListener('scroll', onScroll);
+    innerScrollListenerElement.addEventListener('scroll', onScroll);
+    outerScrollListenerElement?.addEventListener('scroll', onOuterScroll);
 
     return () => {
       if (scrollContainerOriginPosition) {
-        scrollContainer.style.position = scrollContainerOriginPosition;
+        innerScrollContainer.style.position = scrollContainerOriginPosition;
       }
       cancelScroll();
       dragContainer.removeEventListener('mousedown', onMouseDown);
       dragContainer.removeEventListener('touchstart', onMouseDown);
-      scrollListenerElement.removeEventListener('scroll', onScroll);
+      innerScrollListenerElement.removeEventListener('scroll', onScroll);
+      outerScrollListenerElement?.removeEventListener('scroll', onOuterScroll);
       window.removeEventListener('mousemove', onMouseMove);
       window.removeEventListener('mouseup', onMouseUp);
       window.removeEventListener('touchmove', onMouseMove);
       window.removeEventListener('touchend', onMouseUp);
     };
-  }, [disabled, scrollContainer, dragContainer, isCanceled]);
+  }, [disabled, innerScrollContainer, outerScrollContainer, dragContainer, isCanceled]);
 
   const contextValue = useMemo(
     () => ({
@@ -310,7 +297,7 @@ function Selectable<T>(
       isDragging,
       boxPosition,
       mode,
-      scrollContainer,
+      innerScrollContainer,
       startTarget,
       startInside,
       unmountItemsInfo,
@@ -323,7 +310,7 @@ function Selectable<T>(
       isDragging,
       boxPosition,
       mode,
-      scrollContainer,
+      innerScrollContainer,
       startTarget,
       unmountItemsInfo,
       virtual,
@@ -336,7 +323,7 @@ function Selectable<T>(
     <SelectableContext.Provider value={contextValue}>
       {children}
       {isDragging &&
-        scrollContainer &&
+        innerScrollContainer &&
         createPortal(
           <div
             ref={boxRef}
@@ -353,7 +340,7 @@ function Selectable<T>(
               ...boxStyle,
             }}
           />,
-          scrollContainer,
+          innerScrollContainer,
         )}
     </SelectableContext.Provider>
   );

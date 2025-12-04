@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import Selectable, { SelectableRef, useSelectable } from 'react-selectable-box';
+import './example.css';
 
 const list: number[] = [];
 for (let i = 0; i < 200; i++) {
@@ -53,7 +54,7 @@ export default () => {
     <Selectable
       value={value}
       ref={selectableRef}
-      dragContainer={() => document.getElementById('drag-container') as HTMLElement}
+      dragContainer={() => document.getElementById('drag-container')}
       onEnd={(selectingValue, { added, removed }) => {
         const result = value.concat(added).filter((i) => !removed.includes(i));
         setValue(result);

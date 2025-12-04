@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import Selectable, { useSelectable } from 'react-selectable-box';
+import './example.css';
 
 const list: number[] = [];
 for (let i = 0; i < 200; i++) {

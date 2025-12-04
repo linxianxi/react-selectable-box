@@ -4,6 +4,7 @@ import { SortableContext, useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { useState } from 'react';
 import Selectable, { useSelectable } from 'react-selectable-box';
+import './example.css';
 
 const list: string[] = [];
 for (let i = 0; i < 200; i++) {
