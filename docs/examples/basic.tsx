@@ -1,6 +1,7 @@
 import { Descriptions, Radio, Switch } from 'antd';
 import { useState } from 'react';
 import Selectable, { useSelectable } from 'react-selectable-box';
+import './example.css';
 
 const list: number[] = [];
 for (let i = 0; i < 200; i++) {
@@ -100,7 +101,7 @@ export default () => {
         disabled={disabled}
         mode={mode}
         value={value}
-        dragContainer={() => document.getElementById('drag-container') as HTMLElement}
+        dragContainer={() => document.getElementById('drag-container')}
         selectStartRange={selectStartRange}
         onEnd={(selectingValue, { added, removed }) => {
           const result = value.concat(added).filter((i) => !removed.includes(i));

@@ -1,6 +1,7 @@
 import { useVirtualizer } from '@tanstack/react-virtual';
 import React, { useState } from 'react';
 import Selectable, { useSelectable } from 'react-selectable-box';
+import './example.css';
 
 const list: number[] = [];
 for (let i = 0; i < 2000; i++) {
@@ -49,8 +50,8 @@ export default () => {
   return (
     <Selectable
       value={value}
-      items={list}
-      scrollContainer={() => document.querySelector('.container') as HTMLElement}
+      virtualItems={list}
+      scrollContainer={() => document.querySelector('.container')}
       onEnd={(selectingValue, { added, removed }) => {
         const result = value.concat(added).filter((i) => !removed.includes(i));
         setValue(result);

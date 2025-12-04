@@ -1,4 +1,4 @@
-import { Rule } from './context';
+import { Rule } from './type';
 
 export const getClientXY = (e: MouseEvent | TouchEvent) => {
   const obj = 'touches' in e ? e.touches[0] : e;
