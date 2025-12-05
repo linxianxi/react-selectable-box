@@ -77,4 +77,10 @@ const { setNodeRef, isSelected, isAdding, isRemoving, isSelecting, isDragging } 
 
 #### 1.当配合虚拟列表使用时，传入 `virtualItems` 可以使在滚动过程中被卸载的方块在框选结束后也会被选中。但与某些虚拟列表第三方库结合会有问题，配合较好的是 [@tanstack/react-virtual](https://github.com/TanStack/virtual)。如果你不介意这个问题（不传入 `virtualItems`），建议使用 [react-virtuoso](https://github.com/petyosi/react-virtuoso)，该库使用起来比较简单。
 
-不传入 `virtualItems`: ![before](https://github.com/user-attachments/assets/4ec33cb8-adf5-44da-8573-9e69486c8cb2) 传入 `virtualItems`: ![after](https://github.com/user-attachments/assets/fd60faad-321d-46a4-8aec-c6bda2df2eb1)
+不传入 `virtualItems`:
+
+![before](https://github.com/user-attachments/assets/4ec33cb8-adf5-44da-8573-9e69486c8cb2)
+
+传入 `virtualItems`:
+
+![after](https://github.com/user-attachments/assets/fd60faad-321d-46a4-8aec-c6bda2df2eb1)

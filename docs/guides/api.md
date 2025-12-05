@@ -78,4 +78,10 @@ const { setNodeRef, isSelected, isAdding, isRemoving, isSelecting, isDragging } 
 
 #### 1.When used with a virtual list, passing in `virtualItems` ensures that `block` were unmounted during scrolling will still be selected after the selection ends. However, there can be issues when integrating with certain third-party virtual list libraries. A better integration can be achieved with [@tanstack/react-virtual](https://github.com/TanStack/virtual). If you don't mind not passing in virtualItems, it is recommended to use [react-virtuoso](https://github.com/petyosi/react-virtuoso), as it is simpler to use.
 
-not passing `virtualItems`: ![before](https://github.com/user-attachments/assets/4ec33cb8-adf5-44da-8573-9e69486c8cb2) passing `virtualItems`: ![after](https://github.com/user-attachments/assets/fd60faad-321d-46a4-8aec-c6bda2df2eb1)
+not passing `virtualItems`:
+
+![before](https://github.com/user-attachments/assets/4ec33cb8-adf5-44da-8573-9e69486c8cb2)
+
+passing `virtualItems`:
+
+![after](https://github.com/user-attachments/assets/fd60faad-321d-46a4-8aec-c6bda2df2eb1)
