@@ -26,11 +26,18 @@ function Selectable<T>(
     boxStyle,
     boxClassName,
     compareFn = defaultCompareFn<T>,
+    allowTextSelection,
     onStart,
     onEnd,
   }: SelectableProps<T>,
   ref: React.ForwardedRef<SelectableRef>,
 ) {
+  if (process.env.NODE_ENV === 'development' && selectStartRange !== 'all') {
+    console.warn(
+      '[Selectable] selectStartRange is deprecated, please use onStart to prevent selection start instead.',
+    );
+  }
+
   const [isDragging, setIsDragging] = useState(false);
   const [startCoords, setStartCoords] = useState({ x: 0, y: 0 });
   const [moveCoords, setMoveCoords] = useState({ x: 0, y: 0 });
@@ -61,6 +68,7 @@ function Selectable<T>(
   const startCoordsRef = useLatest(startCoords);
   const isDraggingRef = useLatest(isDragging);
   const selectStartRangeRef = useLatest(selectStartRange);
+  const allowTextSelectionRef = useLatest(allowTextSelection);
 
   const top = Math.max(0, Math.min(startCoords.y, moveCoords.y));
   const left = Math.max(0, Math.min(startCoords.x, moveCoords.x));
@@ -78,7 +86,7 @@ function Selectable<T>(
   }));
 
   const handleStart = useEvent((event: MouseEvent | TouchEvent) => {
-    onStart?.(event);
+    return onStart?.(event);
   });
 
   const handleEnd = useEvent(() => {
@@ -179,16 +187,20 @@ function Selectable<T>(
           // prevent trigger when click too fast
           // https://github.com/linxianxi/react-selectable-box/issues/5
           if (shouldDraggingStart && (boxWidth > 1 || boxHeight > 1)) {
-            setIsDragging(true);
-            scrollContainerOriginPosition = getComputedStyle(innerScrollContainer).position;
-            // default position in browser is `static`
-            if (
-              innerScrollContainer !== document.body &&
-              scrollContainerOriginPosition === 'static'
-            ) {
-              innerScrollContainer.style.position = 'relative';
+            const shouldStart = handleStart(e);
+            if (shouldStart === false) {
+              reset();
+            } else {
+              setIsDragging(true);
+              scrollContainerOriginPosition = getComputedStyle(innerScrollContainer).position;
+              // default position in browser is `static`
+              if (
+                innerScrollContainer !== document.body &&
+                scrollContainerOriginPosition === 'static'
+              ) {
+                innerScrollContainer.style.position = 'relative';
+              }
             }
-            handleStart(e);
           }
         }
       }
@@ -246,7 +258,7 @@ function Selectable<T>(
 
       // Disable text selection, but it will prevent default scroll behavior when mouse move, so we used `useScroll`
       // And it will prevent click events on mobile devices, so don't trigger it
-      if (isMouseEvent) {
+      if (isMouseEvent && !allowTextSelectionRef.current) {
         e.preventDefault();
       }
 

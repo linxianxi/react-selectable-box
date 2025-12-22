@@ -67,12 +67,10 @@ export default function useSelectable<T>({
   }, [startTarget]);
 
   useEffect(() => {
-    if (selectingValue) {
-      if (isSelecting) {
-        selectingValue.current.push(value);
-      } else {
-        selectingValue.current = selectingValue.current.filter((i) => !compareFn(i, value));
-      }
+    if (isSelecting) {
+      selectingValue.current.push(value);
+    } else {
+      selectingValue.current = selectingValue.current.filter((i) => !compareFn(i, value));
     }
   }, [isSelecting]);
 

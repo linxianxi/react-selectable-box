@@ -5,7 +5,9 @@ export interface SelectableProps<T = any> {
   disabled?: boolean;
   children?: React.ReactNode;
   mode?: 'add' | 'remove' | 'reverse';
+  /** @deprecated */
   selectStartRange?: 'all' | 'inside' | 'outside';
+  allowTextSelection?: boolean;
   scrollSpeed?: number;
   scrollContainer?:
     | (() => HTMLElement | null)
@@ -33,7 +35,7 @@ export interface SelectableProps<T = any> {
   boxStyle?: React.CSSProperties;
   boxClassName?: string;
   compareFn?: (a: T, b: T) => boolean;
-  onStart?: (event: MouseEvent | TouchEvent) => void;
+  onStart?: (event: MouseEvent | TouchEvent) => boolean | void;
   onEnd?: (selectingValue: T[], changed: { added: T[]; removed: T[] }) => void;
 }
 
