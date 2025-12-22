@@ -15,14 +15,14 @@ nav: 快速上手
 | disabled | 是否禁用 | boolean | false |
 | mode | 模式 | `add` \| `remove` \| `reverse` | `add` |
 | virtualItems | 全部 item 的集合值，只有虚拟列表时要传[（FAQ）](#faq) | any[] | - |
-| selectStartRange | 从哪里可以开始进行框选 | `all` \| `inside` \| `outside` | `all` |
+| allowTextSelection | 是否允许选择文字, 通过 mousedown preventDefault 控制 | false |
 | scrollSpeed | 滚动速度 | number | 4 |
 | scrollContainer | 指定滚动的容器 | () => HTMLElement \| [ScrollContainerObjectType](#scrollcontainerobjecttype) |
 | dragContainer | 指定可以开始拖拽的容器， 如果设置了 `scrollContainer` 请不要设置，因为在可滚动容器中这两个应该相等 | () => HTMLElement | scrollContainer |
 | boxStyle | 框选框的样式 | React.CSSProperties | - |
 | boxClassName | 框选框的类名 | string | - |
 | compareFn | 因为 value 支持任意类型，所以你可能需要自定义函数进行比较，默认使用 `===` | (item: any, value: any) => boolean | === |
-| onStart | 框选开始时触发的事件 | (event: MouseEvent \| TouchEvent) => void | - |
+| onStart | 框选开始时触发的事件，返回 false 不开始 | (event: MouseEvent \| TouchEvent) => void \| boolean | - |
 | onEnd | 框选结束时触发的事件 | (selectingValue: any[], { added: any[], removed: any[] }) => void | - |
 
 ### ScrollContainerObjectType

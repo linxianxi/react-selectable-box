@@ -15,14 +15,14 @@ nav: Get Started
 | disabled | Whether to disable | boolean | false |
 | mode | Selection mode | `add` \| `remove` \| `reverse` | `add` |
 | virtualItems | The collection value of all items, only the virtual list needs to be passed [（FAQ）](#faq) | any[] | - |
-| selectStartRange | Where to start with box selection | `all` \| `inside` \| `outside` | `all` |
+| allowTextSelection | Allow text selection, controlled by mousedown preventDefault | false |
 | scrollSpeed | Scroll speed | number | 4 |
 | scrollContainer | Specify the scrolling container | () => HTMLElement \| [ScrollContainerObjectType](#scrollcontainerobjecttype) |
 | dragContainer | Specify the container that can start dragging. If `scrollContainer` is set, please do not set it because the two should be equal in a scrollable container. | () => HTMLElement | scrollContainer |
 | boxStyle | Selection box style | React.CSSProperties | - |
 | boxClassName | Selection box className | string | - |
 | compareFn | Because value supports any type, you may need to define a custom function for comparison. The default is `===` | (item: any, value: any) => boolean |
-| onStart | Called when selection starts | (event: MouseEvent \| TouchEvent) => void | - |
+| onStart | Called when selection starts, returning false indicates not starting | (event: MouseEvent \| TouchEvent) => void \| false | - |
 | onEnd | Called when selection ends | (selectingValue: any[], { added: any[], removed: any[] }) => void | - |
 
 ### ScrollContainerObjectType

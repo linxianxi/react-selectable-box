@@ -37,7 +37,6 @@ const Item = ({ value, rule }: { value: number; rule: 'collision' | 'inclusion' 
 export default () => {
   const [value, setValue] = useState<number[]>([]);
   const [mode, setMode] = useState<'add' | 'remove' | 'reverse'>('add');
-  const [selectStartRange, setSelectStartRange] = useState<'all' | 'inside' | 'outside'>('all');
   const [disabled, setDisabled] = useState(false);
   const [rule, setRule] = useState<'collision' | 'inclusion'>('collision');
 
@@ -47,22 +46,6 @@ export default () => {
         column={1}
         items={[
           { label: 'disabled', children: <Switch checked={disabled} onChange={setDisabled} /> },
-          {
-            label: 'selectStartRange',
-            children: (
-              <Radio.Group
-                value={selectStartRange}
-                buttonStyle="solid"
-                optionType="button"
-                options={[
-                  { label: 'all', value: 'all' },
-                  { label: 'inside', value: 'inside' },
-                  { label: 'outside', value: 'outside' },
-                ]}
-                onChange={(e) => setSelectStartRange(e.target.value)}
-              />
-            ),
-          },
           {
             label: 'rule',
             children: (
@@ -102,7 +85,6 @@ export default () => {
         mode={mode}
         value={value}
         dragContainer={() => document.getElementById('drag-container')}
-        selectStartRange={selectStartRange}
         onEnd={(selectingValue, { added, removed }) => {
           const result = value.concat(added).filter((i) => !removed.includes(i));
           setValue(result);
