@@ -1,3 +1,9 @@
+# [2.1.0](https://github.com/linxianxi/react-selectable-box/compare/v2.0.0...v2.1.0) (2025-12-22)
+
+### Features
+
+- onStart support cancel, support allowTextSelection, deprecated selectStartRange ([0d91db9](https://github.com/linxianxi/react-selectable-box/commit/0d91db90f190b32c1690758f1ca1b448a10284e9))
+
 # [2.0.0](https://github.com/linxianxi/react-selectable-box/compare/v1.10.0...v2.0.0) (2025-12-04)
 
 ### Features
