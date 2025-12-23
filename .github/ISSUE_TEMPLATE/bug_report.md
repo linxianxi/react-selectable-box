@@ -38,7 +38,7 @@ description
 
 ### © Version information
 
-- react-selectable-fast
+- react-selectable-box
 - browser
 - system
 
